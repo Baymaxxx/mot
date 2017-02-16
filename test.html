@@ -111,14 +111,15 @@
                 this.target = new Vector2(0, 0);
             },
             appendBall: function() {
-                for (var i = 0; i < 8; i++) {
+                var ballNum = 8;
+                for (var i = 0; i < ballNum; i++) {
                     var left = $.getRandom(5, 390);
                     var top = $.getRandom(5, 290);
 
                     this.pos = new Vector2(left, top);
 
-                    var left = $.getRandom(-3, 3);
-                    var top = $.getRandom(-3, 3);
+                    var left = $.getRandom(-100, 100);
+                    var top = 115-Math.sin((left-100)/200*Math.PI)*235;
                     this.v = new Vector2(left, top);
 
                     var o = $.createObj(this.pos, this.v);
@@ -154,7 +155,7 @@
                     if (_this.objArr.length == 0) {
                         clearInterval(loop);
                     }
-                }, 10);
+                }, 111);
             },
             disperse: function(obj) {
                 if (obj.pos.x >= 400 || obj.pos.x <= 0) {
