@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>mot</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+<div class="g-page"></div>
+<script src="jquery-1.4.4_min.js"></script>
+<script>
+    ;(function($) {
+       var Mot = function (config) {
+           this.config = {
+               debug:true
+           };
+           if (config && $.isPlainObject(config)) {
+               $.extend(this.config, config)
+           } else {
+               this.isConfig = true;
+           }
+       };
+       var self,config,data;
+       Mot.prototype = {
+           debug:function () {
+
+           },
+           init:function (initStr) {
+               //解析传入json字符串
+               self = this;
+               config = this.config;
+               if (initStr) {
+                   data = eval('(' + initStr + ')');
+               }
+               console.log(data);
+           }
+       }
+       window.Mot = Mot;
+    })(jQuery);
+    window.API = new Mot();
+    window.API.init("{'debug':false}");
+</script>
+</body>
+</html>
