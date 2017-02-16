@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>JS Vector2</title>
+
+    <style type="text/css">
+        body
+        {
+            margin:0;
+            padding:0;
+            font-size:12px;
+        }
+        .main
+        {
+            width:400px;
+            height:300px;
+            border:solid #ccc 1px;
+            float:left;
+            background:#000;
+        }
+    </style>
+</head>
+<body>
+<div id="main" class="main">
+
+</div>
+<script type="text/javascript">
+
+    Vector2 = function(x, y) { this.x = x; this.y = y; };
+
+    Vector2.prototype = {
+        copy: function() { return new Vector2(this.x, this.y); },
+        length: function() { return Math.sqrt(this.x * this.x + this.y * this.y); },
+        sqrLength: function() { return this.x * this.x + this.y * this.y; },
+        normalize: function() { var inv = 1 / this.length(); return new Vector2(this.x * inv, this.y * inv); },
+        negate: function() { return new Vector2(-this.x, -this.y); },
+        add: function(v) { return new Vector2(this.x + v.x, this.y + v.y); },
+        subtract: function(v) { return new Vector2(this.x - v.x, this.y - v.y); },
+        multiply: function(f) { return new Vector2(this.x * f, this.y * f); },
+        divide: function(f) { var invf = 1 / f; return new Vector2(this.x * invf, this.y * invf); },
+        dot: function(v) { return this.x * v.x + this.y * v.y; }
+    };
+
+    Array.prototype.indexOf = function(val) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] == val) return i;
+        }
+        return -1;
+    };
+    Array.prototype.remove = function(val) {
+        var index = this.indexOf(val);
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+
+    (function() {
+        var bindEvent,
+            createObj,
+            getRandom;
+
+        var $ = function(id) {
+            return document.getElementById(id);
+        }
+
+        bindEvent = function(obj, e, fun) {
+            if (window.attachEvent) {
+                obj.attachEvent('on' + e, function() { fun.call(obj); });
+            } else {
+                obj.addEventListener(e, fun, false);
+            }
+        }
+        createObj = function(pos, v) {
+            var obj = document.createElement('span');
+            var css = obj.style;
+            css.cssText = "position:absolute;width:13px;height:13px;border-radius:50%;overflow: hidden;";
+            css.left = pos.x + 'px';
+            css.top = pos.y + 'px';
+            var r = $.getRandom(1, 255);
+            var g = $.getRandom(1, 255);
+            var b = $.getRandom(1, 255);
+            css.background = 'rgb(' + r + ',' + g + ',' + b + ')';
+            obj.pos = pos;
+            obj.v = v;
+            obj.isCol = false;
+            return obj;
+        }
+        getRandom = function(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        $.bindEvent = bindEvent;
+        $.createObj = createObj;
+        $.getRandom = getRandom;
+
+        var t = {
+            pos: null,
+            v: null,
+            target: null,
+            main: null,
+            objArr: [],
+            time: 0,
+            init: function() {
+                this.initParams();
+                this.appendBall();
+                this.collection();
+            },
+            initParams: function() {
+                this.time = 0;
+                this.main = $('main');
+                this.target = new Vector2(0, 0);
+            },
+            appendBall: function() {
+                for (var i = 0; i < 8; i++) {
+                    var left = $.getRandom(5, 390);
+                    var top = $.getRandom(5, 290);
+
+                    this.pos = new Vector2(left, top);
+
+                    var left = $.getRandom(-3, 3);
+                    var top = $.getRandom(-3, 3);
+                    this.v = new Vector2(left, top);
+
+                    var o = $.createObj(this.pos, this.v);
+                    this.main.appendChild(o);
+                    this.objArr.push(o);
+                }
+            },
+            collection: function() {
+                var _this = this;
+
+                var loop = setInterval(function() {
+                    for (var i = 0; i < _this.objArr.length; i++) {
+
+                        if (Math.abs(_this.objArr[i].pos.x - _this.target.x) <= 2 && Math.abs(_this.objArr[i].pos.y - _this.target.y) <= 2) {
+                            //_this.main.removeChild(_this.objArr[i]);
+                            //_this.objArr.remove(_this.objArr[i]);
+                            //continue;
+                            _this.objArr[i].isCol = true;
+                        }
+
+                        _this.moveTo(_this.target, _this.objArr[i]);
+                    }
+
+                    _this.time += 10;
+
+                    if (_this.time == 5000) {
+                        _this.time = 0;
+                        for (var i = 0; i < _this.objArr.length; i++) {
+                            _this.objArr[i].isCol = false;
+                        }
+                    }
+
+                    if (_this.objArr.length == 0) {
+                        clearInterval(loop);
+                    }
+                }, 10);
+            },
+            disperse: function(obj) {
+                if (obj.pos.x >= 400 || obj.pos.x <= 0) {
+                    obj.v.x = -obj.v.x;
+                }
+                if (obj.pos.y >= 300 || obj.pos.y <= 0) {
+                    obj.v.y = -obj.v.y;
+                }
+
+                obj.pos.x += obj.v.x;
+                obj.pos.y += obj.v.y;
+            },
+            moveTo: function(targetPos, obj) {
+                var t = targetPos.subtract(obj.pos).normalize();
+
+                if (obj.isCol == true) {
+                    this.disperse(obj);
+                }
+                else {
+                    obj.pos.x += t.x;
+                    obj.pos.y += t.y;
+                }
+
+                obj.style.left = obj.pos.x + 'px';
+                obj.style.top = obj.pos.y + 'px';
+            }
+        }
+
+        onload = function() {
+            t.init();
+        }
+    })();
+</script>
+</body>
+</html>
