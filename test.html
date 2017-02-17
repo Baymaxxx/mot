@@ -45,11 +45,14 @@
     window.onload = function () {//运动轨迹随便写的一个(x/300)2+(y/100)2=1椭圆方程
         var oBox = $('.box');
         var oCenter = $('.center');
+        var oCenterLeft = parseInt(oCenter.css('left'));
+        var oCenterTop = parseInt(oCenter.css('top'));
         var r = 350;
         var m = -r;
         var n = r;
         var y = 0;
         var x = 0;
+        var pengX = oCenterLeft - Math.sqrt(r*r - oCenterTop*oCenterTop);
         function getRandom(m,n) {
             return Math.floor(Math.random()*(n - m + 1) + m);
         }
@@ -70,7 +73,10 @@
             }
             oBox.css('left', x + 'px');
             oBox.css('top', parseInt(y) + 'px');
-//            if()
+            if(parseInt(oBox.css('left')) == -parseInt(pengX)){
+                console.log(parseInt(oBox.css('left')),-parseInt(pengX));
+                console.log(parseInt(oBox.css('top')),-oCenterTop);
+            }
         }
 
         function a() {
@@ -83,17 +89,17 @@
             y = Math.sqrt(1 - Math.pow(m / r, 2)) * -r;
         }
 
-//            function centerMove(){
-//                var centerX = getRandom(-10,10);
-//                var centerY = getRandom(-10,10);
-//                oCenter.css({
-//                    'left': parseInt(oCenter.css('left')) + centerX + 'px',
-//                    'top': parseInt(oCenter.css('top')) + centerY + 'px'
-//                });
-//            }
+//        function centerMove(){
+//            var centerX = getRandom(-10,10);
+//            var centerY = getRandom(-10,10);
+//            oCenter.css({
+//                'left': parseInt(oCenter.css('left')) + centerX + 'px',
+//                'top': parseInt(oCenter.css('top')) + centerY + 'px'
+//            });
+//        }
         move();
         var timer = setInterval(move, 1);
-        var timer2 = setInterval(centerMove, 10);
+//        var timer2 = setInterval(centerMove, 10);
     }
 </script>
 </body>
