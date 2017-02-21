@@ -1,106 +1,103 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-    <style type="text/css">
-        *{
+    <meta charset="utf-8">
+    <title>JS Bin</title>
+    <style>
+        * {
             margin: 0;
             padding: 0;
         }
-        #wrapper{
+
+        .ballWrapper {
             position: relative;
             margin: 0 auto;
             width: 800px;
             height: 600px;
-            background-color: #b7b7b7;
+            background-color: #bbb;
         }
 
-        .center {
+        .ball {
             position: absolute;
-            left: 400px;
-            top: 300px;
-        }
-
-        .box {
-            position: absolute;
-            left: 0;
-            top: 0;
             width: 20px;
             height: 20px;
             border-radius: 50%;
             background-color: #439086;
         }
     </style>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>椭圆轨迹移动</title>
 </head>
 <body>
-<div id="wrapper">
-    <div class="center">
-        <div class="box"></div>
-    </div>
+<div class="ballWrapper">
+    <div class="ball"></div>
+    <!--<div class="ball choose"></div>-->
+    <!--<div class="ball"></div>-->
+    <!--<div class="ball"></div>-->
 </div>
 <script src="jquery-1.4.4_min.js"></script>
-<script type="text/javascript">
-    window.onload = function () {//运动轨迹随便写的一个(x/300)2+(y/100)2=1椭圆方程
-        var oBox = $('.box');
-        var oCenter = $('.center');
-        var oCenterLeft = parseInt(oCenter.css('left'));
-        var oCenterTop = parseInt(oCenter.css('top'));
-        var r = 350;
-        var m = -r;
-        var n = r;
-        var y = 0;
-        var x = 0;
-        var pengX = oCenterLeft - Math.sqrt(r*r - oCenterTop*oCenterTop);
-        function getRandom(m,n) {
-            return Math.floor(Math.random()*(n - m + 1) + m);
+<script>
+    var $m = {
+        int: function (x) {
+            return x ? parseInt(x) : 0;
+        },
+        getRandom: function (m, n) {
+            return Math.floor(Math.random() * (n - m + 1) + m);
         }
+    };
+    $(function () {
+        var kk = 3 / 400;
+        var ball = $('.ball');
+        var ballWrapper = $('.ballWrapper');
+        var ballWrapperW = $m.int(ballWrapper.css('width'));
+        var ballWrapperH = $m.int(ballWrapper.css('height'));
+        var ballW = $m.int(ball.css('width'));
+        var ballH = $m.int(ball.css('height'));
+        var ballArr = [];
+        var posRandom = [];
+//            {x: $m.getRandom(0, 800), y: $m.getRandom(0, 600)},
+        for (var i = 0; i < ball.length; i++) {
+            posRandom[i] = {
+                x: $m.getRandom(0, ballWrapperW - ballW),
+                y: $m.getRandom(0, ballWrapperH - ballH)
+            };
+            ball[i].style.left = posRandom[i].x + 'px';
+            ball[i].style.top = posRandom[i].y + 'px';
+        }
+        var kx = [1,1,1,1];
+        var ky = [1,1,1,1];
         function move() {
-            if (m <= r) {
-                x = m;
-                b();
-            }
-            else {
-                x = n;
-                a();
-                if (x < -r) {
-                    clearInterval(timer);
-                    m = -r;
-                    n = r;
-                    timer = setInterval(move, 1);
+            ball.each(function (i) {
+                var j = i % 2 ? 1 : -1;
+                if (posRandom[i].x > ballWrapperW - ballW) {//x右
+                    posRandom[i].x = -(posRandom[i].x + j);
+                    posRandom[i].y = posRandom[i].y + j * posRandom[i].x * kk;
+                } else if (posRandom[i].x < 0) {//x左
+//                    kx[i] = -kx[i];
+                    posRandom[i].x = -(posRandom[i].x + j);
+                    console.log(posRandom[i].x);
+                    posRandom[i].y = posRandom[i].y + j * posRandom[i].x * kk;
+                } else if (posRandom[i].y > ballWrapperH - ballH) {//y下
+//                    ky[i] = -ky[i];
+                    posRandom[i].x = posRandom[i].x + j;
+                    posRandom[i].y = -(posRandom[i].y + j * posRandom[i].x * kk);
+                } else if (posRandom[i].y < 0) {//y上
+//                    ky[i] = -ky[i];
+                    console.log(posRandom[i].y)
+                    posRandom[i].x = posRandom[i].x + j;
+                    posRandom[i].y = -(posRandom[i].y + j * posRandom[i].x * kk);
+                } else {
+                    posRandom[i].x = posRandom[i].x + j;
+                    posRandom[i].y = posRandom[i].y + j * posRandom[i].x * kk;
                 }
-            }
-            oBox.css('left', x + 'px');
-            oBox.css('top', parseInt(y) + 'px');
-            if(parseInt(oBox.css('left')) == -parseInt(pengX)){
-                console.log(parseInt(oBox.css('left')),-parseInt(pengX));
-                console.log(parseInt(oBox.css('top')),-oCenterTop);
-            }
+                console.log(posRandom[i].x);
+                ball[i].style.left =  posRandom[i].x + 'px';
+                ball[i].style.top =  posRandom[i].y + 'px';
+            })
         }
 
-        function a() {
-            n -= 1;
-            y = Math.sqrt(1 - Math.pow(n / r, 2)) * r;
-        }
-
-        function b() {
-            m += 1;
-            y = Math.sqrt(1 - Math.pow(m / r, 2)) * -r;
-        }
-
-//        function centerMove(){
-//            var centerX = getRandom(-10,10);
-//            var centerY = getRandom(-10,10);
-//            oCenter.css({
-//                'left': parseInt(oCenter.css('left')) + centerX + 'px',
-//                'top': parseInt(oCenter.css('top')) + centerY + 'px'
-//            });
-//        }
-        move();
-        var timer = setInterval(move, 1);
-//        var timer2 = setInterval(centerMove, 10);
-    }
+        setTimeout(function () {
+            var moveTime = setInterval(move, 20);
+        }, 500);
+    });
 </script>
 </body>
 </html>
