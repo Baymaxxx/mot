@@ -1,103 +1,29 @@
-<!DOCTYPE html>
 <html>
 <head>
+    <link type="text/css" rel="stylesheet" href="mot.css">
     <meta charset="utf-8">
-    <title>JS Bin</title>
+    <title></title>
+    <script src="jquery-1.4.4_min.js"></script>
+    <script type="text/javascript" src="parabola.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        .ballWrapper {
-            position: relative;
-            margin: 0 auto;
-            width: 800px;
-            height: 600px;
-            background-color: #bbb;
-        }
-
-        .ball {
-            position: absolute;
+        .ball{
             width: 20px;
-            height: 20px;
-            border-radius: 50%;
+            height:20px;
             background-color: #439086;
+            border-radius: 50%;
         }
     </style>
 </head>
-<body>
-<div class="ballWrapper">
-    <div class="ball"></div>
-    <!--<div class="ball choose"></div>-->
-    <!--<div class="ball"></div>-->
-    <!--<div class="ball"></div>-->
-</div>
-<script src="jquery-1.4.4_min.js"></script>
-<script>
-    var $m = {
-        int: function (x) {
-            return x ? parseInt(x) : 0;
-        },
-        getRandom: function (m, n) {
-            return Math.floor(Math.random() * (n - m + 1) + m);
-        }
-    };
-    $(function () {
-        var kk = 3 / 400;
-        var ball = $('.ball');
-        var ballWrapper = $('.ballWrapper');
-        var ballWrapperW = $m.int(ballWrapper.css('width'));
-        var ballWrapperH = $m.int(ballWrapper.css('height'));
-        var ballW = $m.int(ball.css('width'));
-        var ballH = $m.int(ball.css('height'));
-        var ballArr = [];
-        var posRandom = [];
-//            {x: $m.getRandom(0, 800), y: $m.getRandom(0, 600)},
-        for (var i = 0; i < ball.length; i++) {
-            posRandom[i] = {
-                x: $m.getRandom(0, ballWrapperW - ballW),
-                y: $m.getRandom(0, ballWrapperH - ballH)
-            };
-            ball[i].style.left = posRandom[i].x + 'px';
-            ball[i].style.top = posRandom[i].y + 'px';
-        }
-        var kx = [1,1,1,1];
-        var ky = [1,1,1,1];
-        function move() {
-            ball.each(function (i) {
-                var j = i % 2 ? 1 : -1;
-                if (posRandom[i].x > ballWrapperW - ballW) {//x右
-                    posRandom[i].x = -(posRandom[i].x + j);
-                    posRandom[i].y = posRandom[i].y + j * posRandom[i].x * kk;
-                } else if (posRandom[i].x < 0) {//x左
-//                    kx[i] = -kx[i];
-                    posRandom[i].x = -(posRandom[i].x + j);
-                    console.log(posRandom[i].x);
-                    posRandom[i].y = posRandom[i].y + j * posRandom[i].x * kk;
-                } else if (posRandom[i].y > ballWrapperH - ballH) {//y下
-//                    ky[i] = -ky[i];
-                    posRandom[i].x = posRandom[i].x + j;
-                    posRandom[i].y = -(posRandom[i].y + j * posRandom[i].x * kk);
-                } else if (posRandom[i].y < 0) {//y上
-//                    ky[i] = -ky[i];
-                    console.log(posRandom[i].y)
-                    posRandom[i].x = posRandom[i].x + j;
-                    posRandom[i].y = -(posRandom[i].y + j * posRandom[i].x * kk);
-                } else {
-                    posRandom[i].x = posRandom[i].x + j;
-                    posRandom[i].y = posRandom[i].y + j * posRandom[i].x * kk;
-                }
-                console.log(posRandom[i].x);
-                ball[i].style.left =  posRandom[i].x + 'px';
-                ball[i].style.top =  posRandom[i].y + 'px';
-            })
-        }
 
-        setTimeout(function () {
-            var moveTime = setInterval(move, 20);
-        }, 500);
-    });
-</script>
+<body>
+<div id="ctrl_pad">
+    <div id="info">
+        <em>可以在屏幕上随便拖拽鼠标，或者点击“自动移动”</em> - FPS:<span id="fps">250</span>
+    </div>
+
+</div>
+<div id="bg" style="display: none;">
+</div>
+<script type="text/javascript" src=""></script>
 </body>
 </html>
