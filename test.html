@@ -6,24 +6,28 @@
     <script src="jquery-1.4.4_min.js"></script>
     <script type="text/javascript" src="parabola.js"></script>
     <style>
-        .ball{
-            width: 20px;
-            height:20px;
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .contain{
+            position: relative;
+            margin: 0 auto;
+            width: 1000px;
+            height: 600px;
+            background-color: #e1e1e2;
+        }
+        i{
+            width: 15px;
+            height:15px;
             background-color: #439086;
             border-radius: 50%;
         }
     </style>
 </head>
-
 <body>
-<div id="ctrl_pad">
-    <div id="info">
-        <em>可以在屏幕上随便拖拽鼠标，或者点击“自动移动”</em> - FPS:<span id="fps">250</span>
-    </div>
-
+<div class="contain">
+    <i></i>
 </div>
-<div id="bg" style="display: none;">
-</div>
-<script type="text/javascript" src=""></script>
 </body>
 </html>

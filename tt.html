@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>$Title$</title>
+</head>
+<body>
+<script>
+  var arr = [1,2,3,3,4,2];
+  Array.prototype.unique = function () {
+      var newArr = [];
+      for(var i = 0;i < this.length;i++){
+          if(newArr.indexOf(this[i]) < 0){
+              newArr.push(this[i])
+          }
+      }
+      return newArr;
+  }
+  console.log(arr.unique());
+
+  var Car = function (width,length) {
+      this.width = width;
+      this.length = length;
+      this.car = function () {
+          console.log(this.width,this.length);
+      }
+  }
+  var car1 = new Car(2,1);
+  car1.car();
+</script>
+</body>
+</html>
