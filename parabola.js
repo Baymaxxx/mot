@@ -11,16 +11,15 @@ window.onload = function () {
     var containH = parseInt($('.contain').css('height'));//盒子高
     var speedRate = 2;
     var speedMax = 10;
-    var speedArr = [-speedMax, speedMax]; //速度数组
-    var xArr = [],yArr = [];
-    var xSpeed = [],ySpeed = [];
+    var xArr = [], yArr = [];
+    var xSpeed = [], ySpeed = [];
     for (var i = 0; i < ballNum; i++) {
         xArr.push(rnd(0, containW));//x轴坐标
         yArr.push(rnd(0, containH));//y轴坐标
         xSpeed.push(rnd(-speedMax, speedMax));
         ySpeed.push(rnd(-speedMax, speedMax));
     }
-    console.log(xArr,xSpeed)
+    console.log(xArr, xSpeed);
 
     creatBall(20, '#439086', ballNum);
     var SIZE = parseInt($('.ball').css('width'));//球宽
@@ -32,18 +31,18 @@ window.onload = function () {
                 onMove(ball.eq(i), xArr[i], yArr[i]);
                 xArr[i] = xArr[i] + xSpeed[i];
                 yArr[i] = yArr[i] + ySpeed[i];
-                if (xArr[i] <= SIZE / 2) {
+                if (xArr[i] <= speedMax / 2) {
                     xSpeed[i] = rnd(0, speedMax)
                 }
-                if (xArr[i] >= containW - SIZE / 2) {
+                if (xArr[i] >= containW - SIZE - speedMax / 2) {
                     xSpeed[i] = -rnd(0, speedMax)
                 }
 
-                if (yArr[i] <= SIZE / 2) {
-                    ySpeed[i]  = rnd(0, speedMax)
+                if (yArr[i] <= speedMax / 2) {
+                    ySpeed[i] = rnd(0, speedMax)
                 }
-                if (yArr[i] >= containH - SIZE / 2) {
-                    ySpeed[i]  = -rnd(0, speedMax)
+                if (yArr[i] >= containH - SIZE - speedMax / 2) {
+                    ySpeed[i] = -rnd(0, speedMax)
                 }
 
                 if (xSpeed[i] < -speedMax) {
@@ -59,14 +58,14 @@ window.onload = function () {
                 if (ySpeed[i] < -speedMax) {
                     ySpeed[i] += rnd(0, speedRate);
                 }
-                else if (ySpeed[i]  > speedMax) {
+                else if (ySpeed[i] > speedMax) {
                     ySpeed[i] += rnd(-speedRate, 0);
                 }
                 else {
-                    ySpeed[i]  += rnd(-speedRate, speedRate);
+                    ySpeed[i] += rnd(-speedRate, speedRate);
                 }
             }, 50);
-       }(i))
+        }(i))
     }
     function creatBall(width, bgColor, num) {
         for (var i = 0; i < num; i++) {
