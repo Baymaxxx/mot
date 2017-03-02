@@ -19,15 +19,13 @@ window.onload = function () {
         xSpeed.push(rnd(-speedMax, speedMax));
         ySpeed.push(rnd(-speedMax, speedMax));
     }
-    console.log(xArr, xSpeed);
-
+    var iAutoPlayTimer = [];
     creatBall(20, '#439086', ballNum);
     var SIZE = parseInt($('.ball').css('width'));//球宽
     var ball = $('.ball');
     for (var i = 0; i < ballNum; i++) {
         (function (i) {
-            iAutoPlayTimer = setInterval(function () {
-                // console.log(yArr[1]);
+            iAutoPlayTimer[i] = setInterval(function () {
                 onMove(ball.eq(i), xArr[i], yArr[i]);
                 xArr[i] = xArr[i] + xSpeed[i];
                 yArr[i] = yArr[i] + ySpeed[i];
@@ -65,8 +63,14 @@ window.onload = function () {
                     ySpeed[i] += rnd(-speedRate, speedRate);
                 }
             }, 50);
+            setTimeout((function (i) {
+                return function () {
+                    clearInterval(iAutoPlayTimer[i])
+                }
+            }(i)),3000);
         }(i))
     }
+
     function creatBall(width, bgColor, num) {
         for (var i = 0; i < num; i++) {
             var ballHtml = '<i class="ball ball' + i + '"></i>';

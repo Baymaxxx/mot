@@ -6,39 +6,62 @@
     <title>mot</title>
     <link rel="stylesheet" href="common.css">
     <style>
-        .ball-wrapper {
-            position: relative;
-            margin: 0 auto;
-            width: 1024px;
-            height: 626px;
-            background-color: #e1e1e2;
-            box-sizing: border-box;
+        * {
+            margin: 0;
+            padding: 0;
         }
 
-        .ball-wrapper .ball {
+        .contain {
+            position: relative;
+            margin: 0 auto;
+            width: 934px;
+            height: 540px;
+            border: 8px solid #bbbbbb;
+            outline: 1px solid #909090;
+            background-color: #3a3a3a;
+        }
+
+        .ball {
             position: absolute;
-            left: 0;
-            top: 0;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+            width: 15px;
+            height: 15px;
             background-color: #439086;
+            border-radius: 50%;
+        }
+
+        .active {
+            z-index: 100;
+        }
+
+        .choose {
+            border: 3px solid #ec9720;
         }
     </style>
 </head>
 <body>
-<div class="g-page">
-    <div class="ball-wrapper">
-        <div class="ball"></div>
-    </div>
-</div>
-<script src="jquery-1.4.4_min.js"></script>
-<script src="victor.js"></script>
+<div class="contain"></div>
+<script src="jquery-1.8.3_min.js"></script>
 <script>
     (function ($) {
         var Mot = function (config) {
             this.config = {
-                debug: true
+                debug: true,
+                ballNum: 10, //小球个数
+                selNum: 3,//闪烁数量
+                speedRate: 2,//每次增加减少速度
+                speedMax: 10, //最大速度
+                ballColor: '#fff',//小球颜色
+                ballR: 20,//小球半径
+                moveTime: 1,//运动时间
+                flashTime: 1000,//闪烁时间
+                selColor: '#ec9720',//选中边框颜色
+                containW: 0,
+                containH: 0,
+                xArr: [],
+                yArr: [],
+                flashArr: [],
+                flashBool: '',
+                iAutoPlayTimer: []
             };
             if (config && $.isPlainObject(config)) {
                 $.extend(this.config, config)
@@ -48,13 +71,138 @@
         };
         var self, config, data;
         Mot.prototype = {
-            start: function () {
-            },
             debug: function () {
-                console.log('debug')
+                console.log('debug');
             },
-            getRandom: function (m,n) {
-                return Math.floor(Math.random()*(n - m + 1) + m);
+            rnd: function (min, max) {
+                return Math.floor(Math.random() * (max - min + 1) + min);
+            },//生成n个min到max不重复的随机数
+            rndArr: function (n, min, max) {
+                var arr = [];
+                var arr2 = [];
+                for (var i = 0; i < max - min + 1; i++) {
+                    arr[i] = i + min;
+                }
+                for (var i = 0; i < n; i++) {
+                    var x = parseInt(Math.random() * arr.length);
+                    arr2[i] = arr[x];
+                    for (var j = x; j < arr.length; j++) {
+                        arr[j] = arr[j + 1];
+                    }
+                    arr.length = arr.length - 1;
+                }
+                return arr2;
+            },
+            //闪烁
+            ballFlash: function () {
+                config.flashArr = self.rndArr(config.selNum, 0, config.ballNum - 1);
+                for (var i = 0; i < config.flashArr.length; i++) {
+                    $('.ball').eq(config.flashArr[i]).addClass('active');
+                }
+                config.flashBool = setInterval(function () {
+                    $('.active').toggle();
+                }, config.flashTime / 4);
+            },
+            //圆->方
+            ballToSquare: function () {
+                $('.ball').animate({'border-radius': '0'}, 200)
+            },
+            //生成小球以及显示位置
+            creatBall: function (width, bgColor, num) {
+                for (var i = 0; i < num; i++) {
+                    var ballHtml = '<i class="ball ball' + i + '"></i>';
+                    config.xArr[i] = self.rnd(0, config.containW - width);//x轴坐标
+                    config.yArr[i] = self.rnd(0, config.containH - width);//y轴坐标
+                    $('.contain').append(ballHtml);
+                    $('.ball' + [i]).css({
+                        width: width + 'px',
+                        height: width + 'px',
+                        backgroundColor: bgColor,
+                        left: config.xArr[i] + 'px',
+                        top: config.yArr[i] + 'px'
+                    });
+                }
+                self.ballFlash();
+            },
+            //小球开始运动
+            onMove: function (el, l, t) {
+                el.css({
+                    left: l + 'px',
+                    top: t + 'px'
+                });
+            },
+            //小球运动过程
+            ballMoving: function () {
+                var def = $.Deferred();
+                config.containW = parseInt($('.contain').css('width'));//盒子宽
+                config.containH = parseInt($('.contain').css('height'));//盒子高
+                var SIZE = 2 * config.ballR;//球宽
+                self.creatBall(SIZE, config.ballColor, config.ballNum);
+                var ball = $('.ball');
+                var xSpeed = [], ySpeed = [];
+                for (var i = 0; i < config.ballNum; i++) {
+                    xSpeed.push(self.rnd(-config.speedMax, config.speedMax));
+                    ySpeed.push(self.rnd(-config.speedMax, config.speedMax));
+                }
+                setTimeout(function () {
+                    clearInterval(config.flashBool);
+                    for (var i = 0; i < config.ballNum; i++) {
+                        (function (i) {
+                            config.iAutoPlayTimer[i] = setInterval(function () {
+                                self.onMove(ball.eq(i), config.xArr[i], config.yArr[i]);
+                                config.xArr[i] = config.xArr[i] + xSpeed[i];
+                                config.yArr[i] = config.yArr[i] + ySpeed[i];
+                                if (config.xArr[i] <= config.speedMax / 2) {
+                                    xSpeed[i] = self.rnd(0, config.speedMax)
+                                }
+                                if (config.xArr[i] >= config.containW - SIZE - config.speedMax / 2) {
+                                    xSpeed[i] = -self.rnd(0, config.speedMax)
+                                }
+
+                                if (config.yArr[i] <= config.speedMax / 2) {
+                                    ySpeed[i] = self.rnd(0, config.speedMax)
+                                }
+                                if (config.yArr[i] >= config.containH - SIZE - config.speedMax / 2) {
+                                    ySpeed[i] = -self.rnd(0, config.speedMax)
+                                }
+
+                                if (xSpeed[i] < -config.speedMax) {
+                                    xSpeed[i] += self.rnd(0, config.speedRate);
+                                }
+                                else if (xSpeed[i] > config.speedMax) {
+                                    xSpeed[i] += self.rnd(-config.speedRate, 0);
+                                }
+                                else {
+                                    xSpeed[i] += self.rnd(-config.speedRate, config.speedRate);
+                                }
+
+                                if (ySpeed[i] < -config.speedMax) {
+                                    ySpeed[i] += self.rnd(0, config.speedRate);
+                                }
+                                else if (ySpeed[i] > config.speedMax) {
+                                    ySpeed[i] += self.rnd(-config.speedRate, 0);
+                                }
+                                else {
+                                    ySpeed[i] += self.rnd(-config.speedRate, config.speedRate);
+                                }
+                            }, 50);
+                            setTimeout((function (i) {
+                                return function () {
+                                    clearInterval(config.iAutoPlayTimer[i]);
+                                    self.ballToSquare();
+                                    def.resolve();
+                                }
+                            }(i)), config.moveTime);
+                        }(i));
+                    }
+                }, config.flashTime);
+                return def;
+            },
+            //选择小球
+            chooseBall: function () {
+                $('.ball').click(function () {
+                    $(this).toggleClass('choose');
+                });
             },
             init: function (initStr) {
                 //解析传入json字符串
@@ -63,6 +211,9 @@
                 if (initStr) {
                     data = eval('(' + initStr + ')');
                 }
+                self.ballMoving().then(function () {
+                    self.chooseBall();
+                });
             }
         }
         window.Mot = Mot;
