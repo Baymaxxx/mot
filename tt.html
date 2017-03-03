@@ -6,6 +6,36 @@
 </head>
 <body>
 <script>
+    this.config = {
+        debug: false,
+        ballNum: 10, //小球个数
+        selNum: 3,//闪烁小球数量
+        testNum:10,//每组测试次数
+        thisGameNum:0,//本轮第几回合
+        gameNum:0,//第几次游戏
+        speedRate: 2,//每次增加减少速度
+        speedMax: 8, //最大速度
+        ballColor: '#fff',//小球颜色
+        ballR: 20,//小球半径
+        moveTime: 5000,//运动时间
+        flashTime: 1000,//闪烁时间
+        selColor: '#ec9720',//选中边框颜色
+        containW: 0,//容器宽
+        containH: 0,//容器高
+        xArr: [],//生成点的x坐标
+        yArr: [],//生成点的y坐标
+        flashBool: '',//闪烁计时器
+        iAutoPlayTimer: [],//运动计时器
+        choiceArr: [],//考生选项
+        trueArr: [],//正确选项
+        thisTrueArr: [],//本题正确选项
+        thisSelArr: [],//本题考生选项
+        startTime:0,//开始时间
+        endTime:0,//结束时间
+        thisUseTime:0,//每小题使用时间
+        useTimeArr:[],//使用时间数组
+        allUseTime:0,//总使用时间
+    };
   var arr = [1,2,3,3,4,2];
   Array.prototype.unique = function () {
       var newArr = [];
