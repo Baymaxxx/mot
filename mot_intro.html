@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>mot</title>
+  <link rel="stylesheet" href="common.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: "Microsoft Yahei";
+    }
+    .displayNone{
+      display: none;
+    }
+    .allPage{
+      width: 1024px;
+      height: 626px;
+      margin: 0 auto;
+      padding-top: 20px;
+      background-color: #e1e1e2;
+      position: relative;
+      box-sizing: border-box;
+    }
+    .g-body {
+      position: relative;
+      margin: 0 auto;
+      padding-top: 10px;
+      width: 1024px;
+      height: 626px;
+      background-color: #fff;
+      border: 1px solid #999;
+      box-sizing: border-box;
+    }
+    .time{
+      position: absolute;
+      bottom: 0;
+      right:0;
+    }
+    .contain {
+      position: relative;
+      margin: 0 auto 0;
+      width: 934px;
+      height: 540px;
+      border: 8px solid #bbbbbb;
+      outline: 1px solid #909090;
+      background-color: #3a3a3a;
+    }
+
+    .ball {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background-color: #439086;
+      border-radius: 50%;
+    }
+
+    .active {
+      z-index: 100;
+    }
+
+    .choose {
+      border: 4px solid #ec9720;
+      box-sizing: border-box;
+    }
+    .btn{
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+    }
+    .sure-btn {
+      width: 120px;
+      height: 36px;
+      line-height: 36px;
+      background-color: #636463;
+      margin: 12px auto 0;
+      cursor: default;
+    }
+    .sure-btn.click {
+      background-color: #2fabde;
+      cursor: pointer;
+    }
+    .g-help{
+      width: 731px;
+      height: 496px;
+      line-height: 38px;
+      box-sizing: border-box;
+      letter-spacing: 1px;
+      margin: 31px auto 0;
+      font-size: 18px;
+      padding: 8px 39px;
+      background: url("data:image/png;base64,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QFwDAADiGgAAxDUAAIhrAAAQ1wAAgLgGAABxDQAA4hoAABDXAAAgrgEAQFwDAIC4BgAAxDUAAIhrAAAQ1wAAIK4BAABxDQAA4hoAAMQ1AAAgrgEAQFwDAIC4BgAAcQ0AAIhrAAAQ1wAAIK4BAEBcAwAA4hoAAMQ1AACIawAAQFwDAIC4BgAAcQ0AAOIaAAAQ1wAAIK4BAEBcAwCAuDYCAAAQ1wAAIK4BAEBcAwAA4hoAAMQ1AACIawAAENcAAIC4BgAAcQ0AAOIaAAAQ1wAAIK4BAEBcAwCAuAYAAMQ1AACIawAAENcAACCuAQAAcQ0AAOIaAADENQAAIK4BAEBcAwCAuAYAAHENAACIawAAENcAACCuAQBAXAMAAOIaAADENQAAiGsAAEBcAwCAuAYAAHENAADiGgAAENcAACCuAQBAXAMAAOIaAADENQAAiGsAABDXAACAuAYAAHENAADiGgAAxDUAACCuAQBAXAMAgLgGAADENQAAiGsAABDXAAAgrgEAAHENAADiGgAAxDUAAIhrAABAXAMAgLgGAABxDQAAiGsAABDXAAAgrgEAQFwDAADiGgAAxDUAAIhrAAAQ1wAAgLgGAABxDQAA4hoAABDXAAAgrgEAQFwDAIC4BgAAxDUAAIhrAAAQ1wAAgLgGAABxDQAA4hoAAMQ1AAAgrgEAQFwDAIC4BgAAcQ0AAIhrAAAQ1wAAIK4BAABxDQAA4hoAAMQ1AACIawAAQFwDAIC4BgAAcQ0AAOIaAAAQ1wAAIK4BAEBcAwAA4hoAAMQ1AACIawAAENcAAIC4BgAAcQ0AAOIaAADENQAAIK4BAEBcAwCAuAYAAMQ1AACIawAAENcAACCuAQAAcQ0AAOIaAADENQAAIK4BAEBcAwCAuAYAAHENAACIawAAENcAACCuAQBAXAMAAOIaAADENQAAiGsAAEBcAwCAuAYAAHENAADiGgAAENcAACCuAQBAXAMAgLgGAADENQAAiGsAABDXAACAuAYAAHENAADiGgAAxDUAACCuAQBAXAMAgLgGAADENQAAiGsAABDXAAAgrgEAAHENAADiGgAAxDUAAIhrAABAXAMAgLgGAABxDQAAiGsAABDXAAAgrgEAQFwDAADiGgAAxDUAAIhrAAAQ1wAAgLgGAABxDQAA4hoAABDXAAAgrgEAQFwDAIC4BgAAxDUAAIhrAAAQ1wAAIK4BAABxDQAA4hoAAMQ1AAAgrgEAQFwDAIC4BgAAcQ0AAIhrAAAQ1wAAIK4BAABxDQAA4hoAAMQ1AACIawAAQFwDAIC4BgAAcQ0AAOIaAAAQ1wAAIK4BAEBcAwAA4hoAAMQ1AAC8HeK6SlJVlakAAMAudkrmOkkWF6/+ZjAYnFpbW7tW2QAAwLbaJFWqJG0Gg0EuXLjw9SSpf/b4r08uLBw83ff9T9q2Tdu2408EAAB2S+yqqjIcDjM7O/vCL37529vLK0uLd/349OPNiy9eyNyBAxkMBuYEAAA3MBgMcmBuLufPP5eHfvDTR9ba5nh9cHb2jy+9/NqH//zU0x8/8YH357ZbD+fQLYdG+yIAAMBWddI0TV5/fTn/fPa5PH3uXK6uXr3jq5+992x9792feeJ7D//wC+fPn39qdWX1I7ffflsOzx9KXYy+tjM+AACYKMtkfT25eOlK/v78c3np5X/85bbjx/+QJMXGJ337u9//08ra+sHh3MKHDh9eSDUzk/RJn94EAQBgrEiRtZXVXL5yMW+8sfTMkUMLf7v/y1+8a0tcJ8l3Hnr4d1cWl+6o6vqOru/Sd32KojBBAADYiOuySN/36dv22aPHjv3+K1+672vXwvs6px/91cnXXn3lGyurK+9J3yfiGgAArsV1kdxyy9wzR48e/+bdn/7UC5s/9m8AAAD//wMAP2rQ117LA9oAAAAASUVORK5CYII=") no-repeat;
+    }
+    .g-help h2{
+      font-size: 28px;
+      text-align: center;
+      letter-spacing: 2px;
+      margin-bottom: 30px;
+    }
+    .g-help p{
+      margin-bottom: 30px;
+    }
+    .g-help .innerHelpBtn{
+      width: 120px;
+      height: 36px;
+      color: #fff;
+      display: block;
+      font-size: 16px;
+      margin: 84px auto 0;
+      background-color: #0e65e8;
+      cursor: pointer;
+    }
+  </style>
+  <style>
+    .introjs-overlay {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      z-index: 9999996;
+      background-color: #000;
+      opacity: 0.5;
+      filter: alpha(opacity=50);
+    }
+
+    .introjs-fixParent {
+      z-index: auto !important;
+      opacity: 1.0 !important;
+      filter: alpha(opacity=100);
+    }
+
+    .introjs-showElement, tr.introjs-showElement > td, tr.introjs-showElement > th {
+      z-index: 9999998 !important
+    }
+
+    .introjs-relativePosition, tr.introjs-showElement > td, tr.introjs-showElement > th {
+      position: relative
+    }
+
+    .introjs-helperLayer {
+      position: absolute;
+      z-index: 9999997;
+      background-color: #FFF;
+      border: 1px solid #777;
+      border-radius: 4px;
+    }
+
+    .introjs-helperNumberLayer {
+      display: none;
+      position: absolute;
+      top: -16px;
+      left: -16px;
+      z-index: 9999999 !important;
+      zoom: 1;
+      padding: 2px;
+      font-family: Arial, verdana, tahoma;
+      font-size: 13px;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+      background: #ff3019;
+      background: -webkit-linear-gradient(top, #ff3019 0, #cf0404 100%);
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ff3019), color-stop(100%, #cf0404));
+      background: -moz-linear-gradient(top, #ff3019 0, #cf0404 100%);
+      background: -ms-linear-gradient(top, #ff3019 0, #cf0404 100%);
+      background: -o-linear-gradient(top, #ff3019 0, #cf0404 100%);
+      background: linear-gradient(to bottom, #ff3019 0, #cf0404 100%);
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      border: 3px solid white;
+      border-radius: 50%;
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3019', endColorstr='#cf0404', GradientType=0);
+      filter: progid:DXImageTransform.Microsoft.Shadow(direction=135, strength=2, color=ff0000);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, .4)
+    }
+
+    .introjs-arrow {
+      border: 5px solid white;
+      content: '';
+      position: absolute
+    }
+
+    .introjs-arrow.top {
+      top: -10px;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: white;
+      border-left-color: transparent
+    }
+
+    .introjs-arrow.top-right {
+      top: -10px;
+      right: 10px;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: white;
+      border-left-color: transparent
+    }
+
+    .introjs-arrow.top-middle {
+      top: -10px;
+      left: 50%;
+      margin-left: -5px;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: white;
+      border-left-color: transparent
+    }
+
+    .introjs-arrow.right {
+      right: -10px;
+      top: 10px;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      border-left-color: white
+    }
+
+    .introjs-arrow.bottom {
+      bottom: -10px;
+      border-top-color: white;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      border-left-color: transparent
+    }
+
+    .introjs-arrow.left {
+      left: -10px;
+      top: 10px;
+      border-top-color: transparent;
+      border-right-color: white;
+      border-bottom-color: transparent;
+      border-left-color: transparent
+    }
+
+    .introjs-tooltip {
+      position: absolute;
+      padding: 10px;
+      background-color: white;
+      min-width: 200px;
+      max-width: 300px;
+      border-radius: 3px;
+      box-shadow: 0 1px 10px rgba(0, 0, 0, .4);
+    }
+
+    .introjs-tooltipbuttons {
+      text-align: center;
+    }
+
+    .introjs-button {
+      position: relative;
+      overflow: visible;
+      display: inline-block;
+      padding: .3em .8em;
+      border: 1px solid #d4d4d4;
+      margin: 0;
+      text-decoration: none;
+      text-shadow: 1px 1px 0 #fff;
+      font: 11px/normal sans-serif;
+      color: #333;
+      white-space: nowrap;
+      cursor: pointer;
+      outline: 0;
+      background-color: #ececec;
+      background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f4f4f4), to(#ececec));
+      background-image: -moz-linear-gradient(#f4f4f4, #ececec);
+      background-image: -o-linear-gradient(#f4f4f4, #ececec);
+      background-image: linear-gradient(#f4f4f4, #ececec);
+      -webkit-background-clip: padding;
+      -moz-background-clip: padding;
+      -o-background-clip: padding-box;
+      -webkit-border-radius: .2em;
+      -moz-border-radius: .2em;
+      border-radius: .2em;
+      zoom: 1;
+      *display: inline;
+      margin-top: 10px
+    }
+
+    .introjs-button:hover {
+      border-color: #bcbcbc;
+      text-decoration: none;
+      box-shadow: 0 1px 1px #e3e3e3
+    }
+
+    .introjs-button:focus, .introjs-button:active {
+      background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ececec), to(#f4f4f4));
+      background-image: -moz-linear-gradient(#ececec, #f4f4f4);
+      background-image: -o-linear-gradient(#ececec, #f4f4f4);
+      background-image: linear-gradient(#ececec, #f4f4f4)
+    }
+
+    .introjs-button::-moz-focus-inner {
+      padding: 0;
+      border: 0
+    }
+
+    .introjs-skipbutton {
+      margin-right: 5px;
+      color: #7a7a7a;
+      display: none;
+    }
+
+    .introjs-prevbutton {
+      -webkit-border-radius: .2em 0 0 .2em;
+      -moz-border-radius: .2em 0 0 .2em;
+      border-radius: .2em 0 0 .2em;
+      border-right: 0;
+      display:none;
+    }
+
+    .introjs-nextbutton {
+      -webkit-border-radius: 0 .2em .2em 0;
+      -moz-border-radius: 0 .2em .2em 0;
+      border-radius: 0 .2em .2em 0
+    }
+
+    .introjs-disabled, .introjs-disabled:hover, .introjs-disabled:focus {
+      color: #9a9a9a;
+      border-color: #d4d4d4;
+      box-shadow: none;
+      cursor: default;
+      background-color: #f4f4f4;
+      background-image: none;
+      text-decoration: none
+    }
+
+    .introjs-bullets {
+      text-align: center
+    }
+
+    .introjs-bullets ul {
+      clear: both;
+      margin: 15px auto 0;
+      padding: 0;
+      display: inline-block
+    }
+
+    .introjs-bullets ul li {
+      list-style: none;
+      float: left;
+      margin: 0 2px
+    }
+
+    .introjs-bullets ul li a {
+      display: block;
+      width: 6px;
+      height: 6px;
+      background: #ccc;
+      border-radius: 10px;
+      -moz-border-radius: 10px;
+      -webkit-border-radius: 10px;
+      text-decoration: none
+    }
+
+    .introjs-bullets ul li a:hover {
+      background: #999
+    }
+
+    .introjs-bullets ul li a.active {
+      background: #999
+    }
+
+    .introjsFloatingElement {
+      position: absolute;
+      height: 0;
+      width: 0;
+      left: 50%;
+      top: 50%
+    }
+
+  </style>
+</head>
+<body>
+<div class="allPage">
+  <div class="g-time">
+    <div class="u-right text-right">
+      <p><img src="data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABkAAD/4QONaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6M2NjNzAyNTItYjU1NC1mODQ2LWI0MmUtNzNhMWY0MzllZDUwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjNBMEMzODU5N0UzMDExRTY4MkMzQTJEMkIxMTY1QUYxIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjNBMEMzODU4N0UzMDExRTY4MkMzQTJEMkIxMTY1QUYxIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE1IChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjNlYmNlZjBmLWExYzgtMTQ0Yy1iMWFjLTU5M2M2OGQyNmZkNyIgc3RSZWY6ZG9jdW1lbnRJRD0iYWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjgxYTA1YmI3LTdlMGQtMTFlNi1iNmY1LWNiYmE2YTljY2I1NCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/uAA5BZG9iZQBkwAAAAAH/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAgICAgICAgICAgMDAwMDAwMDAwMBAQEBAQEBAgEBAgICAQICAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA//AABEIABEAEQMBEQACEQEDEQH/xAB7AAABBQEAAAAAAAAAAAAAAAAHBAUGCAkKAQADAQEAAAAAAAAAAAAAAAAAAgMBBBAAAQQCAQEGBwAAAAAAAAAAAwIEBQYBBwASE7OU1HU3VZVWCBgJGREAAQIDBwUBAAAAAAAAAAAAAQACESEDMUFRYRIiE8EyIwQUM//aAAwDAQACEQMRAD8A6dqzWGG7oxexthoLP1SaK8dUDX7lw4RUmdSAcwYacn4YJUM7NYrO0Fh8tT5LgLEDgYADQpBSm6i40joZJ15vjlhBTA17jZcohT6qDGoKbuLT8PF0C5PqFXL1IUWrENH6+teXsC1mpOpSNXSVcW0W+SUgGUkIQ37I2ULyQgsFEVnO8hp1DFsYRNozisA2hzZGCT/nXoX4pL+AF5vh8tXJHKxEbU9hi6Cwj9JW942grBTgkhKjmVMJk0vNIYEUGszFbcuFIbyTtrC9g2kmg1KcM3gl9aOxIAhFqAvPK2YNuRvj0WtMNptCbLEjVmsUylf07R9esdvW+NPDQkDSK7XomWIp1noHM2ssCxC4jKdBOF4du3LrKRdIugXW4WIaxvI+dQnjGPTNB0tk0DUVXD+bOuvquT+Wg81y32PwScAxRZ++/wBg5X1Vl3Dzk/V/VNV7UIP1pe21o9Rje6d8p7neEtGxaWc41Zf/2Q==" alt="本题剩余时间"/><span id="timeIntro">本题剩余时间</span>: <span id="time"></span></p>
+    </div>
+  </div>
+  <div class="g-body displayNone">
+    <div class="contain"></div>
+    <button type="button" class="sure-btn btn" id="sureBtn" onselectstart="return false;">确认选择</button>
+  </div>
+  <div class="g-help">
+    <h2>操作指南</h2>
+    <p>任务考察你在限定空间范围内的记忆能力。请尽可能快速的回忆呈现数字顺序和位置，并准确的按照从小到大的顺序在空间中选出数字所在位置。</p>
+    <p></p>
+    <p>请跟随操作指南了解任务操作方式和规则。</p>
+    <button type="button" id="closeHelpBtn" class="innerHelpBtn btn">关 闭</button>
+    <button type="button" id="nextHelpBtn" class="innerHelpBtn btn">下 一 步</button>
+  </div>
+</div>
+<script src="jquery-1.8.3_min.js"></script>
+<script type="text/javascript">
+    (function (p, f) {
+        "object" === typeof exports ? f(exports) : "function" === typeof define && define.amd ? define(["exports"], f) : f(p)
+    })(this, function (p) {
+        function f(a) {
+            this._targetElement = a;
+            this._options = {
+                nextLabel: "Next &rarr;",
+                prevLabel: "&larr; Back",
+                skipLabel: "Skip",
+                doneLabel: "Done",
+                tooltipPosition: "bottom",
+                tooltipClass: "",
+                exitOnEsc: !0,
+                exitOnOverlayClick: !0,
+                showStepNumbers: !0,
+                keyboardNavigation: !0,
+                showButtons: !0,
+                showBullets: !0,
+                scrollToElement: !0,
+                overlayOpacity: 0.8
+            }
+        }
+
+        function r(a) {
+            if (null == a || "object" != typeof a ||
+                "undefined" != typeof a.nodeType)return a;
+            var b = {}, c;
+            for (c in a)b[c] = r(a[c]);
+            return b
+        }
+
+        function s() {
+            this._direction = "forward";
+            "undefined" === typeof this._currentStep ? this._currentStep = 0 : ++this._currentStep;
+            if (this._introItems.length <= this._currentStep)"function" === typeof this._introCompleteCallback && this._introCompleteCallback.call(this), t.call(this, this._targetElement); else {
+                var a = this._introItems[this._currentStep];
+                "undefined" !== typeof this._introBeforeChangeCallback && this._introBeforeChangeCallback.call(this,
+                    a.element);
+                A.call(this, a)
+            }
+        }
+
+        function x() {
+            this._direction = "backward";
+            if (0 === this._currentStep)return !1;
+            var a = this._introItems[--this._currentStep];
+            "undefined" !== typeof this._introBeforeChangeCallback && this._introBeforeChangeCallback.call(this, a.element);
+            A.call(this, a)
+        }
+
+        function t(a) {
+            var b = a.querySelector(".introjs-overlay");
+            if (null != b) {
+                b.style.opacity = 0;
+                setTimeout(function () {
+                    b.parentNode && b.parentNode.removeChild(b)
+                }, 500);
+                (a = a.querySelector(".introjs-helperLayer")) && a.parentNode.removeChild(a);
+                (a = document.querySelector(".introjsFloatingElement")) &&
+                a.parentNode.removeChild(a);
+                if (a = document.querySelector(".introjs-showElement"))a.className = a.className.replace(/introjs-[a-zA-Z]+/g, "").replace(/^\s+|\s+$/g, "");
+                if ((a = document.querySelectorAll(".introjs-fixParent")) && 0 < a.length)for (var c = a.length - 1; 0 <= c; c--)a[c].className = a[c].className.replace(/introjs-fixParent/g, "").replace(/^\s+|\s+$/g, "");
+//                window.removeEventListener ? window.removeEventListener("keydown", this._onKeyDown, !0) : document.detachEvent && document.detachEvent("onkeydown", this._onKeyDown);
+                this._currentStep = void 0
+            }
+        }
+
+        function B(a, b, c, d) {
+            var e = "";
+            b.style.top = null;
+            b.style.right = null;
+            b.style.bottom = null;
+            b.style.left = null;
+            b.style.marginLeft = null;
+            b.style.marginTop = null;
+            c.style.display = "inherit";
+            "undefined" != typeof d && null != d && (d.style.top = null, d.style.left = null);
+            if (this._introItems[this._currentStep])switch (e = this._introItems[this._currentStep], e = "string" === typeof e.tooltipClass ? e.tooltipClass : this._options.tooltipClass, b.className = ("introjs-tooltip " + e).replace(/^\s+|\s+$/g, ""), currentTooltipPosition =
+                this._introItems[this._currentStep].position, currentTooltipPosition) {
+                case "top":
+                    b.style.left = "15px";
+                    b.style.top = "-" + (h(b).height + 10) + "px";
+                    c.className = "introjs-arrow bottom";
+                    break;
+                case "right":
+                    b.style.left = h(a).width + 20 + "px";
+                    c.className = "introjs-arrow left";
+                    break;
+                case "left":
+                    !0 == this._options.showStepNumbers && (b.style.top = "15px");
+                    b.style.right = h(a).width + 20 + "px";
+                    c.className = "introjs-arrow right";
+                    break;
+                case "floating":
+                    c.style.display = "none";
+                    a = h(b);
+                    b.style.left = "50%";
+                    b.style.top = "50%";
+                    b.style.marginLeft =
+                        "-" + a.width / 2 + "px";
+                    b.style.marginTop = "-" + a.height / 2 + "px";
+                    "undefined" != typeof d && null != d && (d.style.left = "-" + (a.width / 2 + 18) + "px", d.style.top = "-" + (a.height / 2 + 18) + "px");
+                    break;
+                case "bottom-right-aligned":
+                    c.className = "introjs-arrow top-righ" +
+                        "t";
+                    b.style.right = "0px";
+                    b.style.bottom = "-" + (h(b).height + 10) + "px";
+                    break;
+                case "bottom-middle-aligned":
+                    d = h(a);
+                    a = h(b);
+                    c.className = "introjs-arrow top-middle";
+                    b.style.left = d.width / 2 - a.width / 2 + "px";
+                    b.style.bottom = "-" + (a.height + 10) + "px";
+                    break;
+                default:
+                    b.style.bottom = "-" + (h(b).height +
+                        10) + "px", c.className = "introjs-arrow top"
+            }
+        }
+
+        function v(a) {
+            if (a && this._introItems[this._currentStep]) {
+                var b = this._introItems[this._currentStep], c = h(b.element), d = 10;
+                "floating" == b.position && (d = 0);
+                a.setAttribute("style", "width: " + (c.width + d) + "px; height:" + (c.height + d) + "px; top:" + (c.top - 5) + "px;left: " + (c.left - 5) + "px;")
+            }
+        }
+
+        function A(a) {
+            var b;
+            "undefined" !== typeof this._introChangeCallback && this._introChangeCallback.call(this, a.element);
+            var c = this, d = document.querySelector(".introjs-helperLayer");
+            h(a.element);
+            if (null != d) {
+                var e = d.querySelector(".introjs-helperNumberLayer"), C = d.querySelector(".introjs-tooltiptext"), g = d.querySelector(".introjs-arrow"), y = d.querySelector(".introjs-tooltip"), k = d.querySelector(".introjs-skipbutton"), n = d.querySelector(".introjs-prevbutton"), l = d.querySelector(".introjs-nextbutton");
+                y.style.opacity = 0;
+                if (null != e && (b = this._introItems[0 <= a.step - 2 ? a.step - 2 : 0], null != b && "forward" == this._direction && "floating" == b.position || "backward" == this._direction && "floating" == a.position))e.style.opacity =
+                    0;
+                v.call(c, d);
+                var m = document.querySelectorAll(".introjs-fixParent");
+                if (m && 0 < m.length)for (b = m.length - 1; 0 <= b; b--)m[b].className = m[b].className.replace(/introjs-fixParent/g, "").replace(/^\s+|\s+$/g, "");
+                b = document.querySelector(".introjs-showElement");
+                b.className = b.className.replace(/introjs-[a-zA-Z]+/g, "").replace(/^\s+|\s+$/g, "");
+//指导语文字框过渡,a.step:第几步
+                c._lastShowElementTimer && clearTimeout(c._lastShowElementTimer);
+                c._lastShowElementTimer = (function () {
+                    null != e && (e.innerHTML = a.step);
+                    C.innerHTML = a.intro;
+                    B.call(c, a.element,
+                        y, g, e);
+                    d.querySelector(".introjs-bullets li > a.active").className = "";
+                    d.querySelector('.introjs-bullets li > a[data-stepnumber="' + a.step + '"]').className = "active";
+                    y.style.opacity = 1;
+                    e && (e.style.opacity = 1);
+                    switch (a.step){
+                        case 3:
+                            break;
+                        case 5:
+                            $('.introjs-tooltip').css({
+                                top : '-85px'
+                            });
+                            $('.introjs-arrow.right').css({
+                                top:'88px'
+                            })
+                            break;
+                        case 6:
+                            $('.introjs-arrow.right').css({
+                                top:'29px'
+                            })
+                            break;
+                        case 7:
+                            $('.introjs-tooltip').css({
+                                top : '-60px'
+                            });
+                            $('.introjs-arrow.right').css({
+                                top:'67px'
+                            })
+                        default :
+                            break;
+                    }
+                }());
+            } else {
+                var k = document.createElement("div"), m = document.createElement("div"), j = document.createElement("div"), n = document.createElement("div"), l = document.createElement("div"), f = document.createElement("div");
+                k.className = "introjs-helperLayer";
+                v.call(c, k);
+                this._targetElement.appendChild(k);
+                m.className =
+                    "introjs-arrow";
+                n.className = "introjs-tooltiptext";
+                n.innerHTML = a.intro;
+                l.className = "introjs-bullets";
+                !1 === this._options.showBullets && (l.style.display = "none");
+                var p = document.createElement("ul");
+                b = 0;
+                for (var u = this._introItems.length; b < u; b++) {
+                    var r = document.createElement("li"), q = document.createElement("a");
+                    q.onclick = function () {
+                        c.goToStep(this.getAttribute("data-stepnumber"))
+                    };
+                    0 === b && (q.className = "active");
+                    q.href = "javascript:void(0);";
+                    q.innerHTML = "&nbsp;";
+                    q.setAttribute("data-stepnumber", this._introItems[b].step);
+                    r.appendChild(q);
+                    p.appendChild(r)
+                }
+                l.appendChild(p);
+                f.className = "introjs-tooltipbuttons";
+                !1 === this._options.showButtons && (f.style.display = "none");
+                j.className = "introjs-tooltip";
+                j.appendChild(n);
+                j.appendChild(l);
+                if (!0 == this._options.showStepNumbers) {
+                    var w = document.createElement("span");
+                    w.className = "introjs-helperNumberLayer";
+                    w.innerHTML = a.step;
+                    k.appendChild(w)
+                }
+                j.appendChild(m);
+                k.appendChild(j);
+                l = document.createElement("a");
+//下一步点击事件
+                l.onclick = function () {
+                    //当class含有introjs-disabled 无法点击
+                    var patt = new RegExp("introjs-disabled");
+                    if(patt.test(l.className)){
+                        l.onclick = function () {
+                            if(patt.test(l.className)){
+                                return;
+                            }else{
+                                c._introItems.length - 1 != c._currentStep && s.call(c)
+                            }
+                        }
+                    }else{
+                        c._introItems.length - 1 != c._currentStep && s.call(c)
+                    }
+                };
+                l.href =
+                    "javascript:void(0);";
+                l.innerHTML = this._options.nextLabel;
+                n = document.createElement("a");
+                n.onclick = function () {
+                    0 != c._currentStep && x.call(c)
+                };
+                n.href = "javascript:void(0);";
+                n.innerHTML = this._options.prevLabel;
+                k = document.createElement("a");
+                k.className = "introjs-button introjs-skipbutton";
+                k.href = "javascript:void(0);";
+                k.innerHTML = this._options.skipLabel;
+                k.onclick = function () {
+                    c._introItems.length - 1 == c._currentStep && "function" === typeof c._introCompleteCallback && c._introCompleteCallback.call(c);
+                    c._introItems.length -
+                    1 != c._currentStep && "function" === typeof c._introExitCallback && c._introExitCallback.call(c);
+                    t.call(c, c._targetElement)
+                };
+                f.appendChild(k);
+                1 < this._introItems.length && (f.appendChild(n), f.appendChild(l));
+                j.appendChild(f);
+                B.call(c, a.element, j, m, w)
+            }
+            0 == this._currentStep && 1 < this._introItems.length ? (n.className = "introjs-button introjs-prevbutton introjs-disabled", l.className = "introjs-button introjs-nextbutton", k.innerHTML = this._options.skipLabel) : this._introItems.length - 1 == this._currentStep || 1 == this._introItems.length ?
+                (k.innerHTML = this._options.doneLabel, n.className = "introjs-button introjs-prevbutton", l.className = "introjs-button introjs-nextbutton introjs-disabled") : (n.className = "introjs-button introjs-prevbutton", l.className = "introjs-button introjs-nextbutton", k.innerHTML = this._options.skipLabel);
+//this._currentStep 为step - 1
+            var curr = this._currentStep;
+            if(curr === 2){
+                l.className = "introjs-button introjs-nextbutton introjs-disabled";
+            }else if(curr === 6 ||curr === 3 ||curr === 4 ||curr === 5){
+                l.className = "introjs-button introjs-nextbutton introjs-disabled displayNone"
+            }
+            //l.focus();
+            a.element.className += " introjs-showElement";
+            b = z(a.element, "position");
+            "absolute" !== b && "relative" !== b && (a.element.className += " introjs-relativePosition");
+            for (b = a.element.parentNode; null != b && "body" !== b.tagName.toLowerCase();) {
+                m =
+                    z(b, "z-index");
+                j = parseFloat(z(b, "opacity"));
+                if (/[0-9]+/.test(m) || 1 > j)b.className += " introjs-fixParent";
+                b = b.parentNode
+            }
+            b = a.element.getBoundingClientRect();
+            !(0 <= b.top && 0 <= b.left && b.bottom + 80 <= window.innerHeight && b.right <= window.innerWidth) && !0 === this._options.scrollToElement && (j = a.element.getBoundingClientRect(), b = void 0 != window.innerWidth ? window.innerHeight : document.documentElement.clientHeight, m = j.bottom - (j.bottom - j.top), j = j.bottom - b, 0 > m || a.element.clientHeight > b ? window.scrollBy(0, m - 30) : window.scrollBy(0,
+                j + 100));
+            "undefined" !== typeof this._introAfterChangeCallback && this._introAfterChangeCallback.call(this, a.element)
+        }
+
+        function z(a, b) {
+            var c = "";
+            a.currentStyle ? c = a.currentStyle[b] : document.defaultView && document.defaultView.getComputedStyle && (c = document.defaultView.getComputedStyle(a, null).getPropertyValue(b));
+            return c && c.toLowerCase ? c.toLowerCase() : c
+        }
+
+        function D(a) {
+            var b = document.createElement("div"), c = "", d = this;
+            b.className = "introjs-overlay";
+            if ("body" === a.tagName.toLowerCase())c += "top: 0;bottom: 0; left: 0;right: 0;position: fixed;",
+                b.setAttribute("style", c); else {
+                var e = h(a);
+                e && (c += "width: " + e.width + "px; height:" + e.height + "px; top:" + e.top + "px;left: " + e.left + "px;", b.setAttribute("style", c))
+            }
+            a.appendChild(b);
+            //点击任意地方事件
+            //b.onclick = function () {
+            //    !0 == d._options.exitOnOverlayClick && (t.call(d, a), void 0 != d._introExitCallback && d._introExitCallback.call(d))
+            //};
+            setTimeout(function () {
+                c += "opacity: 0.5;filter:alpha(opacity=50";
+                b.setAttribute("style", c)
+            }, 10);
+            return !0
+        }
+
+        function h(a) {
+            var b = {};
+            b.width = a.offsetWidth;
+            b.height = a.offsetHeight;
+            for (var c =
+                0, d = 0; a && !isNaN(a.offsetLeft) && !isNaN(a.offsetTop);)c += a.offsetLeft, d += a.offsetTop, a = a.offsetParent;
+            b.top = d;
+            b.left = c;
+            return b
+        }
+
+        var u = function (a) {
+            if ("object" === typeof a)return new f(a);
+            if ("string" === typeof a) {
+                if (a = document.querySelector(a))return new f(a);
+                throw Error("There is no element with given selector.");
+            }
+            return new f(document.body)
+        };
+        u.version = "0.9.0";
+        u.fn = f.prototype = {
+            clone: function () {
+                return new f(this)
+            }, setOption: function (a, b) {
+                this._options[a] = b;
+                return this
+            }, setOptions: function (a) {
+                var b = this._options,
+                    c = {}, d;
+                for (d in b)c[d] = b[d];
+                for (d in a)c[d] = a[d];
+                this._options = c;
+                return this
+            }, start: function () {
+                a:{
+                    var a = this._targetElement, b = [], c = this;
+                    if (this._options.steps)for (var d = [], e = 0, d = this._options.steps.length; e < d; e++) {
+                        var f = r(this._options.steps[e]);
+                        f.step = b.length + 1;
+                        "string" === typeof f.element && (f.element = document.querySelector(f.element));
+                        if ("undefined" === typeof f.element || null == f.element) {
+                            var g = document.querySelector(".introjsFloatingElement");
+                            null == g && (g = document.createElement("div"), g.className =
+                                "introjsFloatingElement", document.body.appendChild(g));
+                            f.element = g;
+                            f.position = "floating"
+                        }
+                        null != f.element && b.push(f)
+                    } else {
+                        d = a.querySelectorAll("*[data-intro]");
+                        if (1 > d.length)break a;
+                        e = 0;
+                        for (f = d.length; e < f; e++) {
+                            var g = d[e], h = parseInt(g.getAttribute("data-step"), 10);
+                            0 < h && (b[h - 1] = {
+                                element: g,
+                                intro: g.getAttribute("data-intro"),
+                                step: parseInt(g.getAttribute("data-step"), 10),
+                                tooltipClass: g.getAttribute("data-tooltipClass"),
+                                position: g.getAttribute("data-position") || this._options.tooltipPosition
+                            })
+                        }
+                        e = h = 0;
+                        for (f =
+                                 d.length; e < f; e++)if (g = d[e], null == g.getAttribute("data-step")) {
+                            for (; "undefined" != typeof b[h];)h++;
+                            b[h] = {
+                                element: g,
+                                intro: g.getAttribute("data-intro"),
+                                step: h + 1,
+                                tooltipClass: g.getAttribute("data-tooltipClass"),
+                                position: g.getAttribute("data-position") || this._options.tooltipPosition
+                            }
+                        }
+                    }
+                    e = [];
+                    for (d = 0; d < b.length; d++)b[d] && e.push(b[d]);
+                    b = e;
+                    b.sort(function (a, b) {
+                        return a.step - b.step
+                    });
+                    c._introItems = b;
+                    D.call(c, a) && (s.call(c), a.querySelector(".introjs-skipbutton"), a.querySelector(".introjs-nextbutton"), c._onKeyDown =
+                        function (b) {
+                            //if ( !0 == c._options.exitOnEsc)t.call(c, a), void 0 != c._introExitCallback && c._introExitCallback.call(c); else if (37 === b.keyCode)x.call(c); else if (39 === b.keyCode || 13 === b.keyCode)s.call(c), b.preventDefault ? b.preventDefault() : b.returnValue = !1
+                        }, c._onResize = function () {
+                        v.call(c, document.querySelector(".introjs-helperLayer"))
+                    }, window.addEventListener ? (this._options.keyboardNavigation && window.addEventListener("keydown", c._onKeyDown, !0), window.addEventListener("resize", c._onResize, !0)) :
+                    document.attachEvent && (this._options.keyboardNavigation && document.attachEvent("onkeydown", c._onKeyDown), document.attachEvent("onresize", c._onResize)))
+                }
+                return this
+            }, goToStep: function (a) {
+                this._currentStep = a - 2;
+                "undefined" !== typeof this._introItems && s.call(this);
+                return this
+            }, nextStep: function () {
+                s.call(this);
+                return this
+            }, previousStep: function () {
+                x.call(this);
+                return this
+            }, exit: function () {
+                t.call(this, this._targetElement)
+            }, refresh: function () {
+                v.call(this, document.querySelector(".introjs-helperLayer"));
+                return this
+            },
+            onbeforechange: function (a) {
+                if ("function" === typeof a)this._introBeforeChangeCallback = a; else throw Error("Provided callback for onbeforechange was not a function");
+                return this
+            }, onchange: function (a) {
+                if ("function" === typeof a)this._introChangeCallback = a; else throw Error("Provided callback for onchange was not a function.");
+                return this
+            }, onafterchange: function (a) {
+                if ("function" === typeof a)this._introAfterChangeCallback = a; else throw Error("Provided callback for onafterchange was not a function");
+                return this
+            },
+            oncomplete: function (a) {
+                if ("function" === typeof a)this._introCompleteCallback = a; else throw Error("Provided callback for oncomplete was not a function.");
+                return this
+            }, onexit: function (a) {
+                if ("function" === typeof a)this._introExitCallback = a; else throw Error("Provided callback for onexit was not a function.");
+                return this
+            }
+        };
+        return p.introJs = u
+    });
+</script>
+<script>
+    (function ($) {
+        var Mot = function (config) {
+            this.config = {
+                debug: false,
+                ballNum: 10, //小球个数
+                selNum: 3,//闪烁小球数量
+                selNumMax: 5,//最大闪烁数量
+                testNum: 2,//每组测试次数
+                speedRate: 2,//每次增加减少速度
+                speedMax: 8, //最大速度
+                ballColor: '#fff',//小球颜色
+                ballR: 20,//小球半径
+                moveTime: 5000,//运动时间
+                flashTime: 1000,//闪烁时间
+                selColor: '#ec9720',//选中边框颜色
+                timeText: 300,//答题最大时间
+            };
+        };
+        var self, config, data,
+            xArr = [],//生成点的x坐标
+            yArr = [],//生成点的y坐标
+            containW = 0,//容器宽
+            containH = 0,//容器高
+            thisGameNum = 0,//本轮第几回合
+            gameNum = 0,//第几次游戏
+            flashBool = '',//闪烁计时器
+            iAutoPlayTimer = [],//运动计时器
+            testTimeOut = [],//测试计时器
+            thisTrueArr = [],//本题正确选项
+            thisSelArr = [],//本题考生选项
+            startTime = 0,//小任务开始时间
+            endTime = 0,//小任务结束时间
+            thisUseTime = 0,//每小题使用时间
+            thisAccuracy = 0,//每小题正确率
+            allAccuracyArr = [],//正确率数组
+            allTimeArr = [],//使用时间数组
+            allUseTime = 0,//总使用时间
+            allTrueNum = 0,//答对总次数
+            allTestNum = 0;//总测试次数
+        Mot.prototype = {
+            //操作指引
+            changeIntro: function () {
+                $('.g-help,.g-model').hide();
+                $('.g-main').show();
+                $('#timeIntro').text('本任务剩余时间');
+                introJs().setOptions({
+                    nextLabel: '下一步 &rarr;',
+                    prevLabel: '&larr; 上一步',
+                    skipLabel: '跳过',
+                    doneLabel: "完成",
+                    exitOnOverlayClick:false,
+                    exitOnEsc: true,
+                    showBullets:false,//圆点
+                    showButtons :true,//上一步下一步显示
+                    keyboardNavigation:false,
+                    scrollToElement:false,
+                    overlayOpacity:1,
+                    disableInteraction:false
+                }).goToStep(1).start().onchange(function(target) {
+                    switch (target.id) {
+                        case "step3":
+                            break;
+                        case "step4":
+                            break;
+                        case "step5":
+                            break;
+                        default :
+                            return;
+                    }
+                });
+            },
+            debug: function () {
+                $(".active").css("background", "#ec9720");
+            },
+            //随机数
+            rnd: function (min, max) {
+                return Math.floor(Math.random() * (max - min + 1) + min);
+            },
+            //生成n个min到max不重复的随机数
+            rndArr: function (n, min, max) {
+                var arr = [];
+                var arr2 = [];
+                for (var i = 0; i < max - min + 1; i++) {
+                    arr[i] = i + min;
+                }
+                for (var i = 0; i < n; i++) {
+                    var x = parseInt(Math.random() * arr.length);
+                    arr2[i] = arr[x];
+                    for (var j = x; j < arr.length; j++) {
+                        arr[j] = arr[j + 1];
+                    }
+                    arr.length = arr.length - 1;
+                }
+                return arr2;
+            },
+            //移除数组中指定值
+            arrRemove: function (arr, val) {
+                var index = arr.indexOf(val);
+                if (index > -1) {
+                    arr.splice(index, 1);
+                }
+            },
+            //数组对比
+            compareArr: function (oTextArr, nTextArr) {
+                var sameArr = [];
+                for (var s in oTextArr) {
+                    for (var x in nTextArr) {
+                        if (oTextArr[s] == nTextArr[x]) {
+                            sameArr.push(oTextArr[s]);
+                        }
+                    }
+                }
+                return sameArr.length;
+            },
+            //秒数转分钟显示
+            secondsToTime: function (totalseconds) {
+                var minute = Math.floor((totalseconds % 3600) / 60);
+                var second = (totalseconds - minute * 60 );
+                if (minute.toString().length == 1) {
+                    minute = "0" + minute;
+                }
+                if (second.toString().length == 1) {
+                    second = "0" + second;
+                }
+                var showTime = minute + ":" + second; //显示时间
+                return showTime;
+            },
+            //倒计时
+            setTime: function () {
+                var showTime = $('#time').text();
+                var minute = showTime.split(':')[0];
+                var second = showTime.split(':')[1];
+                second--;
+                if (second == -1) {
+                    minute--;
+                    second = 59;
+                }
+                if (minute.toString().length == 1) {
+                    minute = "0" + minute;
+                }
+                if (second.toString().length == 1) {
+                    second = "0" + second;
+                }
+                if ((minute == 0) && (second == 0)) {
+                    $('#time').text("00:00");
+                    setTimeout(function () {
+                        self.returnText();
+                    },1000);
+                } else {
+                    $('#time').text(minute + ":" + second);
+                }
+                if( $('#time').text() != '00:00') {
+                    time = setTimeout(self.setTime, 1000);
+                }
+            },
+            //闪烁
+            ballFlash: function () {
+                thisTrueArr = self.rndArr(config.selNum, 0, config.ballNum - 1);
+                for (var i = 0; i < thisTrueArr.length; i++) {
+                    $('.ball').eq(thisTrueArr[i]).addClass('active');
+                }
+                flashBool = setInterval(function () {
+
+                    $('.active').toggle();
+                }, config.flashTime / 4);
+            },
+            //圆->方
+            ballToSquare: function () {
+                $('.ball').animate({'border-radius': '0'}, 200)
+            },
+            //生成小球以及显示位置
+            creatBall: function (width, bgColor, num) {
+                for (var i = 0; i < num; i++) {
+                    var ballHtml = '<i class="ball ball' + i + '" data-index=' + i + '></i>';
+                    xArr[i] = self.rnd(0, containW - width);//x轴坐标
+                    yArr[i] = self.rnd(0, containH - width);//y轴坐标
+                    $('.contain').append(ballHtml);
+                    $('.ball' + [i]).css({
+                        width: width + 'px',
+                        height: width + 'px',
+                        backgroundColor: bgColor,
+                        left: xArr[i] + 'px',
+                        top: yArr[i] + 'px'
+                    });
+                }
+            },
+            //清除小球
+            clearBall: function () {
+                $(".ball").remove();
+            },
+            //小球开始运动
+            onMove: function (el, l, t) {
+                el.css({
+                    left: l + 'px',
+                    top: t + 'px'
+                });
+            },
+            //小球运动过程
+            ballMoving: function () {
+                var def = $.Deferred();
+                containW = parseInt($('.contain').css('width'));//盒子宽
+                containH = parseInt($('.contain').css('height'));//盒子高
+                var SIZE = 2 * config.ballR;//球宽
+                self.clearBall();
+                self.creatBall(SIZE, config.ballColor, config.ballNum);
+                var ball = $('.ball');
+                var xSpeed = [], ySpeed = [];
+                for (var i = 0; i < config.ballNum; i++) {
+                    xSpeed.push(self.rnd(-config.speedMax, config.speedMax));
+                    ySpeed.push(self.rnd(-config.speedMax, config.speedMax));
+                }
+                self.ballFlash();
+
+                testTimeOut = setTimeout(function () {
+                    clearInterval(flashBool);
+                    for (var i = 0; i < config.ballNum; i++) {
+                        (function (i) {
+                            iAutoPlayTimer[i] = setInterval(function () {
+                                self.onMove(ball.eq(i), xArr[i], yArr[i]);
+                                xArr[i] = xArr[i] + xSpeed[i];
+                                yArr[i] = yArr[i] + ySpeed[i];
+                                if (xArr[i] <= config.speedMax / 2) {
+                                    xSpeed[i] = self.rnd(0, config.speedMax)
+                                }
+                                if (xArr[i] >= containW - SIZE - config.speedMax / 2) {
+                                    xSpeed[i] = -self.rnd(0, config.speedMax)
+                                }
+
+                                if (yArr[i] <= config.speedMax / 2) {
+                                    ySpeed[i] = self.rnd(0, config.speedMax)
+                                }
+                                if (yArr[i] >= containH - SIZE - config.speedMax / 2) {
+                                    ySpeed[i] = -self.rnd(0, config.speedMax)
+                                }
+
+                                if (xSpeed[i] < -config.speedMax) {
+                                    xSpeed[i] += self.rnd(0, config.speedRate);
+                                }
+                                else if (xSpeed[i] > config.speedMax) {
+                                    xSpeed[i] += self.rnd(-config.speedRate, 0);
+                                }
+                                else {
+                                    xSpeed[i] += self.rnd(-config.speedRate, config.speedRate);
+                                }
+
+                                if (ySpeed[i] < -config.speedMax) {
+                                    ySpeed[i] += self.rnd(0, config.speedRate);
+                                }
+                                else if (ySpeed[i] > config.speedMax) {
+                                    ySpeed[i] += self.rnd(-config.speedRate, 0);
+                                }
+                                else {
+                                    ySpeed[i] += self.rnd(-config.speedRate, config.speedRate);
+                                }
+                            }, 50);
+                            setTimeout((function (i) {
+                                return function () {
+                                    clearInterval(iAutoPlayTimer[i]);
+                                    self.ballToSquare();
+                                    def.resolve();
+                                    startTime = new Date().getTime();//开始时间
+                                }
+                            }(i)), config.moveTime);
+                        }(i));
+                    }
+                }, config.flashTime + 50);
+                return def;
+            },
+            //选择小球
+            chooseBall: function () {
+                $('.ball').css("cursor", "pointer").click(function () {
+                    var index = $(this).data('index');
+                    var chooseNum = $(".choose").length;
+                    if (chooseNum < config.selNum) {
+                        $(this).toggleClass('choose');
+                        if (thisSelArr.indexOf(index) < 0) {
+                            thisSelArr.push(index);
+                        } else {
+                            self.arrRemove(thisSelArr, index);
+                        }
+                    } else if (chooseNum === config.selNum) {
+                        $(this).removeClass('choose');
+                        self.arrRemove(thisSelArr, index);
+                    }
+                    self.selFun();
+                });
+            },
+            //确认选择方法
+            selFun: function () {
+                var sureBtnBool = 0;
+                if (thisSelArr.length === config.selNum) {
+                    $("#sureBtn").addClass('click');
+                } else {
+                    $("#sureBtn").removeClass('click');
+                }
+                $("#sureBtn.click").click(function () {
+                    if (sureBtnBool === 0) {
+                        endTime = new Date().getTime();//结束时间
+                        thisUseTime = endTime - startTime;//每题使用时间
+                        var thisTrueNum = self.compareArr(thisSelArr, thisTrueArr);
+                        allTimeArr.push(thisUseTime);
+                        allTrueNum = thisTrueNum === config.selNum ? allTrueNum + 1 : allTrueNum;
+                        thisAccuracy = (thisTrueNum / config.selNum).toFixed(2);
+                        allAccuracyArr.push(thisAccuracy);
+                        self.returnText();
+                        sureBtnBool = 1;
+                        thisGameNum++;
+                        if (thisGameNum === config.testNum) {
+                            thisGameNum = 0;
+                            gameNum++;
+                            config.selNum++;
+                            if (config.selNum > config.selNumMax) {
+                                console.log('end');
+                                return false;
+                            }
+                        }
+//                        console.log(self.compareArr(thisSelArr,thisTrueArr),thisUseTime);
+                        for (var i = 0; i < config.ballNum; i++) {
+                            clearInterval(iAutoPlayTimer[i]);
+                        }
+                        clearTimeout(testTimeOut);
+                        clearInterval(flashBool);
+                        self.ballMoving().then(function () {
+                            self.chooseBall();
+                        });
+                        $("#sureBtn").removeClass('click');
+                        thisSelArr = [];
+                    }
+                });
+            },
+            //返回给DST文本
+            returnText: function () {
+                for (var i = 0; i < config.ballNum; i++) {
+                    clearInterval(iAutoPlayTimer[i]);
+                }
+                clearTimeout(testTimeOut);
+                clearInterval(flashBool);
+                console.log(allTestNum, allTrueNum, allAccuracyArr, allTimeArr);
+            },
+            init: function (initStr) {
+                //解析传入json字符串
+                self = this;
+                config = this.config;
+                if (initStr) {
+                    data = eval('(' + initStr + ')');
+                    if (config && $.isPlainObject(data)) {
+                        $.extend(this.config, data)
+                    } else {
+                        this.isConfig = true;
+                    }
+                }
+                $("#closeHelpBtn").hide();
+                $('#time').html(self.secondsToTime(config.timeText + 1));
+                self.setTime();
+                self.ballMoving().then(function () {
+                    self.chooseBall();
+                });
+                if (config.debug) {
+                    self.debug();
+                }
+                allTestNum = (config.selNumMax - config.selNum + 1) * config.testNum; //测试总次数
+            }
+        };
+        window.Mot = Mot;
+    })(jQuery);
+    window.API = new Mot();
+    window.API.init("{'debug':false,'ballNum':10,'selNum':3,'selNumMax':5," +
+        "'testNum':2,'speedRate':2,'speedMax':8,'ballColor':'#fff','ballR':20,'moveTime':5000," +
+        "'flashTime':1000,'selColor':'#ec9720','timeText':300}");
+</script>
+</body>
+</html>

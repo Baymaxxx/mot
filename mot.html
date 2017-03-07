@@ -10,7 +10,8 @@
             margin: 0;
             padding: 0;
         }
-        .page{
+
+        .page {
             position: relative;
             margin: 0 auto;
             padding-top: 10px;
@@ -19,6 +20,12 @@
             background-color: #fff;
             border: 1px solid #999;
             box-sizing: border-box;
+        }
+
+        .time {
+            position: absolute;
+            bottom: 0;
+            right: 0;
         }
 
         .contain {
@@ -47,7 +54,8 @@
             border: 4px solid #ec9720;
             box-sizing: border-box;
         }
-        .sure-btn{
+
+        .sure-btn {
             background-color: #636463;
             width: 120px;
             height: 36px;
@@ -59,7 +67,8 @@
             line-height: 36px;
             cursor: default;
         }
-        .sure-btn.click{
+
+        .sure-btn.click {
             background-color: #2fabde;
             cursor: pointer;
         }
@@ -67,6 +76,7 @@
 </head>
 <body>
 <div class="page">
+    <div class="time" id="time"></div>
     <div class="contain"></div>
     <div class="sure-btn" id="sureBtn" onselectstart="return false;">确认选择</div>
 </div>
@@ -78,52 +88,53 @@
                 debug: false,
                 ballNum: 10, //小球个数
                 selNum: 3,//闪烁小球数量
-                selNumMax:5,//最大闪现数量
-                testNum:2,//每组测试次数
-                thisGameNum:0,//本轮第几回合
-                gameNum:0,//第几次游戏
+                selNumMax: 5,//最大闪烁数量
+                testNum: 2,//每组测试次数
                 speedRate: 2,//每次增加减少速度
                 speedMax: 8, //最大速度
                 ballColor: '#fff',//小球颜色
                 ballR: 20,//小球半径
-                moveTime: 50,//运动时间
+                moveTime: 5000,//运动时间
                 flashTime: 1000,//闪烁时间
                 selColor: '#ec9720',//选中边框颜色
-                containW: 0,//容器宽
-                containH: 0,//容器高
-                xArr: [],//生成点的x坐标
-                yArr: [],//生成点的y坐标
-                flashBool: '',//闪烁计时器
-                iAutoPlayTimer: [],//运动计时器
-                testTimeOut: [],//测试计时器
-                choiceArr: [],//考生选项
-                trueArr: [],//正确选项
-                thisTrueArr: [],//本题正确选项
-                thisSelArr: [],//本题考生选项
-                testTime:0,//整个任务时间
-                startTime:0,//小任务开始时间
-                endTime:0,//小任务结束时间
-                thisUseTime:0,//每小题使用时间
-                useTimeArr:[],//使用时间数组
-                allUseTime:0,//总使用时间
-            };
-            if (config && $.isPlainObject(config)) {
-                $.extend(this.config, config)
-            } else {
-                this.isConfig = true;
+                timeText: 300//答题最大时间
             }
         };
-        var self, config, data;
+        var self, config, data,
+            xArr = [],//生成点的x坐标
+            yArr = [],//生成点的y坐标
+            containW = 0,//容器宽
+            containH = 0,//容器高
+            thisGameNum = 0,//本轮第几回合
+            gameNum = 0,//第几次游戏
+            flashBool = '',//闪烁计时器
+            iAutoPlayTimer = [],//运动计时器
+            testTimeOut = [],//测试计时器
+            thisTrueArr = [],//本题正确选项
+            thisSelArr = [],//本题考生选项
+            startTime = 0,//小任务开始时间
+            endTime = 0,//小任务结束时间
+            thisUseTime = 0,//每小题使用时间
+            thisAccuracy = 0,//每小题正确率
+            allAccuracyArr = [],//正确率数组
+            allTimeArr = [],//使用时间数组
+            allUseTime = 0,//总使用时间
+            allTrueNum = 0,//答对总次数
+            allTestNum = 0;//总测试次数
         Mot.prototype = {
             debug: function () {
                 $(".active").css("background", "#ec9720");
             },
             //随机数
             rnd: function (min, max) {
+                max = Math.max(min, max);
+                min = Math.min(min, max);
                 return Math.floor(Math.random() * (max - min + 1) + min);
             },
             //生成n个min到max不重复的随机数
             rndArr: function (n, min, max) {
+                max = Math.max(min, max);
+                min = Math.min(min, max);
                 var arr = [];
                 var arr2 = [];
                 for (var i = 0; i < max - min + 1; i++) {
@@ -139,8 +150,9 @@
                 }
                 return arr2;
             },
+            //移除数组中指定值
             arrRemove: function (arr, val) {
-                var index = arr.indexOf(val);
+                var index = $.inArray(val, arr)
                 if (index > -1) {
                     arr.splice(index, 1);
                 }
@@ -157,13 +169,50 @@
                 }
                 return sameArr.length;
             },
+            //秒数转分钟显示
+            secondsToTime: function (totalseconds) {
+                var minute = Math.floor((totalseconds % 3600) / 60);
+                var second = (totalseconds - minute * 60 );
+                if (minute.toString().length == 1) {
+                    minute = "0" + minute;
+                }
+                if (second.toString().length == 1) {
+                    second = "0" + second;
+                }
+                var showTime = minute + ":" + second; //显示时间
+                return showTime;
+            },
+            //倒计时
+            setTime: function () {
+                var showTime = $('#time').text();
+                var minute = showTime.split(':')[0];
+                var second = showTime.split(':')[1];
+                second--;
+                if (second == -1) {
+                    minute--;
+                    second = 59;
+                }
+                if (minute.toString().length == 1) {
+                    minute = "0" + minute;
+                }
+                if (second.toString().length == 1) {
+                    second = "0" + second;
+                }
+                if ((minute == 0) && (second == 0)) {
+                    $('#time').text("00:00");
+                    setTimeout(function () {
+                        self.returnText();
+                    }, 1000);
+                } else {
+                    $('#time').text(minute + ":" + second);
+                }
+                if ($('#time').text() != '00:00') {
+                    var time = setTimeout(self.setTime, 1000);
+                }
+            },
             //闪烁
             ballFlash: function () {
-                config.thisTrueArr = self.rndArr(config.selNum, 0, config.ballNum - 1);
-                for (var i = 0; i < config.thisTrueArr.length; i++) {
-                    $('.ball').eq(config.thisTrueArr[i]).addClass('active');
-                }
-                config.flashBool = setInterval(function () {
+                flashBool = setInterval(function () {
                     $('.active').toggle();
                 }, config.flashTime / 4);
             },
@@ -173,23 +222,41 @@
             },
             //生成小球以及显示位置
             creatBall: function (width, bgColor, num) {
+                var createdxArr = [], createdyArr = [];
                 for (var i = 0; i < num; i++) {
                     var ballHtml = '<i class="ball ball' + i + '" data-index=' + i + '></i>';
-                    config.xArr[i] = self.rnd(0, config.containW - width);//x轴坐标
-                    config.yArr[i] = self.rnd(0, config.containH - width);//y轴坐标
                     $('.contain').append(ballHtml);
+                    if (i < config.selNum) {
+                        $('.ball').addClass('active');
+                        thisTrueArr.push(i);
+                        xArr[i] = self.rnd(0, containW - width);
+                        yArr[i] = self.rnd(0, containH - width);
+                        createdxArr.push([xArr[i] - width, xArr[i] + width]);
+                        createdyArr.push([yArr[i] - width, yArr[i] + width]);
+                    } else {
+                        //闪烁小球和其他小球焦点不重合
+                        xArr[i] = self.rnd(0, containW - width);
+                        yArr[i] = self.rnd(0, containH - width);
+                        for (var j = 0; j < createdxArr.length; j++) {
+                            if (xArr[i] > createdxArr[j][0] && xArr[i] < createdxArr[j][1]) {
+                                xArr[i] = self.rnd(0, containW - width);
+                            }
+                            if (yArr[i] > createdyArr[j][0] && yArr[i] < createdyArr[j][1]) {
+                                yArr[i] = self.rnd(0, containH - width);
+                            }
+                        }
+                    }
                     $('.ball' + [i]).css({
                         width: width + 'px',
                         height: width + 'px',
                         backgroundColor: bgColor,
-                        left: config.xArr[i] + 'px',
-                        top: config.yArr[i] + 'px'
+                        left: xArr[i] + 'px',
+                        top: yArr[i] + 'px'
                     });
                 }
-                self.ballFlash();
             },
             //清除小球
-            clearBall:function () {
+            clearBall: function () {
                 $(".ball").remove();
             },
             //小球开始运动
@@ -202,8 +269,8 @@
             //小球运动过程
             ballMoving: function () {
                 var def = $.Deferred();
-                config.containW = parseInt($('.contain').css('width'));//盒子宽
-                config.containH = parseInt($('.contain').css('height'));//盒子高
+                containW = parseInt($('.contain').css('width'));//盒子宽
+                containH = parseInt($('.contain').css('height'));//盒子高
                 var SIZE = 2 * config.ballR;//球宽
                 self.clearBall();
                 self.creatBall(SIZE, config.ballColor, config.ballNum);
@@ -213,25 +280,27 @@
                     xSpeed.push(self.rnd(-config.speedMax, config.speedMax));
                     ySpeed.push(self.rnd(-config.speedMax, config.speedMax));
                 }
-                config.testTimeOut = setTimeout(function () {
-                    clearInterval(config.flashBool);
+                self.ballFlash();
+
+                testTimeOut = setTimeout(function () {
+                    clearInterval(flashBool);
                     for (var i = 0; i < config.ballNum; i++) {
                         (function (i) {
-                            config.iAutoPlayTimer[i] = setInterval(function () {
-                                self.onMove(ball.eq(i), config.xArr[i], config.yArr[i]);
-                                config.xArr[i] = config.xArr[i] + xSpeed[i];
-                                config.yArr[i] = config.yArr[i] + ySpeed[i];
-                                if (config.xArr[i] <= config.speedMax / 2) {
+                            iAutoPlayTimer[i] = setInterval(function () {
+                                self.onMove(ball.eq(i), xArr[i], yArr[i]);
+                                xArr[i] = xArr[i] + xSpeed[i];
+                                yArr[i] = yArr[i] + ySpeed[i];
+                                if (xArr[i] <= config.speedMax / 2) {
                                     xSpeed[i] = self.rnd(0, config.speedMax)
                                 }
-                                if (config.xArr[i] >= config.containW - SIZE - config.speedMax / 2) {
+                                if (xArr[i] >= containW - SIZE - config.speedMax / 2) {
                                     xSpeed[i] = -self.rnd(0, config.speedMax)
                                 }
 
-                                if (config.yArr[i] <= config.speedMax / 2) {
+                                if (yArr[i] <= config.speedMax / 2) {
                                     ySpeed[i] = self.rnd(0, config.speedMax)
                                 }
-                                if (config.yArr[i] >= config.containH - SIZE - config.speedMax / 2) {
+                                if (yArr[i] >= containH - SIZE - config.speedMax / 2) {
                                     ySpeed[i] = -self.rnd(0, config.speedMax)
                                 }
 
@@ -257,15 +326,15 @@
                             }, 50);
                             setTimeout((function (i) {
                                 return function () {
-                                    clearInterval(config.iAutoPlayTimer[i]);
+                                    clearInterval(iAutoPlayTimer[i]);
                                     self.ballToSquare();
                                     def.resolve();
-                                    config.startTime = new Date().getTime();//开始时间
+                                    startTime = new Date().getTime();//开始时间
                                 }
                             }(i)), config.moveTime);
                         }(i));
                     }
-                }, config.flashTime);
+                }, config.flashTime + 50);
                 return def;
             },
             //选择小球
@@ -275,56 +344,70 @@
                     var chooseNum = $(".choose").length;
                     if (chooseNum < config.selNum) {
                         $(this).toggleClass('choose');
-                        if (config.thisSelArr.indexOf(index) < 0) {
-                            config.thisSelArr.push(index);
+                        if ($.inArray(index, thisSelArr)) {
+                            thisSelArr.push(index);
                         } else {
-                            self.arrRemove(config.thisSelArr,index);
+                            self.arrRemove(thisSelArr, index);
                         }
                     } else if (chooseNum === config.selNum) {
                         $(this).removeClass('choose');
-                        self.arrRemove(config.thisSelArr,index);
+                        self.arrRemove(thisSelArr, index);
                     }
                     self.selFun();
                 });
             },
-            //考生选项与正确选项处理
+            //确认选择方法
             selFun: function () {
                 var sureBtnBool = 0;
-                if(config.thisSelArr.length === config.selNum){
+                if (thisSelArr.length === config.selNum) {
                     $("#sureBtn").addClass('click');
-                }else {
+                } else {
                     $("#sureBtn").removeClass('click');
                 }
                 $("#sureBtn.click").click(function () {
-                    if(sureBtnBool === 0){
-                        config.endTime = new Date().getTime();//结束时间
-                        config.thisUseTime = config.endTime - config.startTime;//每题使用时间
+                    if (sureBtnBool === 0) {
+                        endTime = new Date().getTime();//结束时间
+                        thisUseTime = endTime - startTime;//每题使用时间
+                        var thisTrueNum = self.compareArr(thisSelArr, thisTrueArr);
+                        allTimeArr.push(thisUseTime);
+                        allTrueNum = thisTrueNum === config.selNum ? allTrueNum + 1 : allTrueNum;
+                        thisAccuracy = (thisTrueNum / config.selNum).toFixed(2);
+                        allAccuracyArr.push(thisAccuracy);
+                        thisTrueArr = [];
+                        self.returnText();
                         sureBtnBool = 1;
-                        config.thisGameNum++;
-                        if(config.thisGameNum === config.testNum){
-                            config.thisGameNum = 0;
-                            config.gameNum++;
+                        thisGameNum++;
+                        if (thisGameNum === config.testNum) {
+                            thisGameNum = 0;
+                            gameNum++;
                             config.selNum++;
-                            console.log(config.selNum,config.selNumMax)
-                            if(config.selNum > config.selNumMax){
-                                console.log('end');
+                            if (config.selNum > config.selNumMax) {
+//                                console.log('end');
+                                return false;
                             }
                         }
-//                        console.log(self.compareArr(config.thisSelArr,config.thisTrueArr),config.thisUseTime);
-
-
-                        for(var i = 0;i<config.ballNum;i++){
-                            clearInterval(config.iAutoPlayTimer[i]);
+//                        console.log(self.compareArr(thisSelArr,thisTrueArr),thisUseTime);
+                        for (var i = 0; i < config.ballNum; i++) {
+                            clearInterval(iAutoPlayTimer[i]);
                         }
-                        clearTimeout(config.testTimeOut);
-                        clearInterval(config.flashBool);
+                        clearTimeout(testTimeOut);
+                        clearInterval(flashBool);
                         self.ballMoving().then(function () {
                             self.chooseBall();
                         });
                         $("#sureBtn").removeClass('click');
-                        config.thisSelArr = [];
+                        thisSelArr = [];
                     }
                 });
+            },
+            //返回给DST文本
+            returnText: function () {
+                for (var i = 0; i < config.ballNum; i++) {
+                    clearInterval(iAutoPlayTimer[i]);
+                }
+                clearTimeout(testTimeOut);
+                clearInterval(flashBool);
+//                console.log(allTestNum, allTrueNum, allAccuracyArr, allTimeArr);
             },
             init: function (initStr) {
                 //解析传入json字符串
@@ -332,19 +415,29 @@
                 config = this.config;
                 if (initStr) {
                     data = eval('(' + initStr + ')');
+                    if (config && $.isPlainObject(data)) {
+                        $.extend(this.config, data)
+                    } else {
+                        this.isConfig = true;
+                    }
                 }
+                $('#time').html(self.secondsToTime(config.timeText + 1));
+                self.setTime();
                 self.ballMoving().then(function () {
                     self.chooseBall();
                 });
                 if (config.debug) {
                     self.debug();
                 }
+                allTestNum = (config.selNumMax - config.selNum + 1) * config.testNum; //测试总次数
             }
         };
         window.Mot = Mot;
     })(jQuery);
     window.API = new Mot();
-    window.API.init("{'debug':false}");
+    window.API.init("{'debug':false,'ballNum':10,'selNum':3,'selNumMax':5," +
+        "'testNum':2,'speedRate':2,'speedMax':8,'ballColor':'#fff','ballR':20,'moveTime':5000," +
+        "'flashTime':1000,'selColor':'#ec9720','timeText':300}");
 </script>
 </body>
 </html>
