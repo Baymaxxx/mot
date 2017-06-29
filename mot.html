@@ -129,7 +129,7 @@
 <script src="jquery-1.8.3_min.js"></script>
 <script>
   (function ($) {
-    var Mot = function (config) {
+    function Mot(config) {
       this.config = {
         debug: false,
         ballNum: 10, //小球个数
@@ -169,6 +169,7 @@
       schedule = 1,//测试进度
       sureBtnBool = 0;
     Mot.prototype = {
+      constructor: Mot,
       debug: function () {
         if (config.debug) {
           $(".active").css("background", "#137137");
@@ -489,7 +490,7 @@
   })(jQuery);
   window.API = new Mot();
   window.API.init("{'debug':true,'ballNum':10,'selNum':3,'selNumMax':5," +
-    "'testNum':10,'speedRate':2,'speedMax':8,'ballColor':'#fbcf2e','ballR':20,'moveTime':1," +
+    "'testNum':10,'speedRate':2,'speedMax':8,'ballColor':'#fbcf2e','ballR':20,'moveTime':5000," +
     "'flashTime':1000,'timeText':300,'level':50}");
 </script>
 </body>

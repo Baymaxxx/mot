@@ -414,6 +414,84 @@
     .g-help .m-time .help-time {
       color: #3b5998;
     }
+
+    .g-click{
+      display: none;
+    }
+    .g-click .u-main{
+      width: 509px;
+      text-align: center;
+      z-index: 1000;
+      background-color: transparent;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -244px;
+      margin-top: -150px;
+    }
+    .g-click .u-main .intro{
+      font-size: 23px;
+      text-align: center;
+      line-height: 60px;
+      color: #1ab2e8;
+      width: 444px;
+      margin: 0 auto;
+      letter-spacing: 2px;
+    }
+    .g-click .u-main h2{
+      color: #fff;
+      font-size: 33px;
+      margin-top: -20px;
+      margin-bottom: 24px;
+    }
+    .g-click .u-main .intro-btn1{
+      width: 210px;
+      height: 38px;
+      background: transparent;
+      color: #fbf410;
+      font-size: 32px;
+      margin-top: 40px;
+      letter-spacing: 6px;
+    }
+    .g-bottom,.g-test{
+      display: none;
+    }
+    .g-model{
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      background-color: #000;
+      filter:alpha(opacity=90);
+      opacity: 0.9;
+      display: none;
+    }
+    .m-practise{
+      position: absolute;
+      width: 100%;
+      display: none;
+    }
+    .help-btn{
+      position: absolute;
+      left: 0;
+      top: 19px;
+      cursor: pointer;
+      background-color: #fe521d;
+    }
+    .help-btn img{
+      vertical-align: -4px;
+      display: inline-block;
+      margin-right: 9px;
+    }
+    .endPractise-btn{
+      position: absolute;
+      left: 133px;
+      top: 19px;
+      cursor: pointer;
+      background-color: #0e65e8;
+    }
   </style>
   <style>
     .introjs-overlay {
@@ -430,38 +508,55 @@
 <body>
 <div class="page">
   <div class="g-test">
-    <div class="g-contain" data-intro="此处显示当前任务的剩余时间及答题进度。" id="step2"  data-position='bottom' data-step="2"></div>
-  </div>
+      <div class="g-contain" data-intro="此处显示当前任务的剩余时间及答题进度。" id="step2"  data-position='bottom' data-step="2"></div>
+    </div>
   <div class="g-bottom">
     <div class="g-bottom-inner">
       <div class="time-schedule" data-intro="此处显示当前任务的剩余时间及答题进度。"  data-position='top' data-step="1">
         <div class="time-wrapper">
           <span class="span-left">本题剩余时间</span><span class="time span-right" id="time"></span>
         </div>
-        <div class="schedule-wrapper" data-intro="此处显示当前任务的剩余时间及答题进度。"  data-position='top' data-step="4">
-          <span class="span-left">本题答题进度</span><span class="span-right"><span class="schedule"
-                                                                              id="schedule">01</span><span>/</span><span
-            class="all-schedule">30</span></span>
+        <div class="schedule-wrapper">
+          <span class="span-left">本题答题进度</span><span class="span-right"><span class="schedule" id="schedule">01</span><span>/</span><span class="all-schedule">30</span></span>
         </div>
+      </div>
+      <div class="m-practise">
+        <div class="help-btn button" id="helpBtn" onselectstart="return false;"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAUCAMAAABs8jdaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Rjk2NjExMzk5OUJDMTFFNkFCOURFMjZCMDU5RTVCNTYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Rjk2NjExM0E5OUJDMTFFNkFCOURFMjZCMDU5RTVCNTYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpGOTRCMEU4MTk5QkMxMUU2QUI5REUyNkIwNTlFNUI1NiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpGOTRCMEU4Mjk5QkMxMUU2QUI5REUyNkIwNTlFNUI1NiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqupONUAAABXUExURfv8/cK6uvn6+/r7/Pb2993a2tfT09jT1PHw8e7t7vr6+9bR0ufl5e3s7fDw8drW1uro6c3Hx8nCwvn5+vPz9NvX2OPg4fX29tnV1ufm5u/u79vY2AAAAEI+CSMAAAAddFJOU/////////////////////////////////////8AWYbnagAAAGBJREFUeNpkzEcOgDAMRNFJCL33Nvc/JxgwROKvnqWRYQNIPUm8NZ7tabvmo5WjxtwZchLH4JU4ui2/nIESC6F/QyPOHoqVj53h39yjmOqtLPhtUHmG50T3Q5K2au0QYAC29wyk0uUjugAAAABJRU5ErkJggg=="
+            alt="指导语"/>指导语</div>
+        <div class="endPractise-btn button" id="endPractiseBtn" onselectstart="return false;">结束练习</div>
       </div>
       <div class="sure-btn button" id="sureBtn" onselectstart="return false;" data-intro="此处显示当前任务的剩余时间及答题进度。"  data-position='top' data-step="3">确认选择</div>
     </div>
   </div>
-</div>
-<div class="g-help">
-  <div class="m-time">
-    <p><img class="time-icon"
-            src="data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABkAAD/4QONaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6M2NjNzAyNTItYjU1NC1mODQ2LWI0MmUtNzNhMWY0MzllZDUwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjNBMEMzODU5N0UzMDExRTY4MkMzQTJEMkIxMTY1QUYxIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjNBMEMzODU4N0UzMDExRTY4MkMzQTJEMkIxMTY1QUYxIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE1IChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjNlYmNlZjBmLWExYzgtMTQ0Yy1iMWFjLTU5M2M2OGQyNmZkNyIgc3RSZWY6ZG9jdW1lbnRJRD0iYWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjgxYTA1YmI3LTdlMGQtMTFlNi1iNmY1LWNiYmE2YTljY2I1NCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/uAA5BZG9iZQBkwAAAAAH/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAgICAgICAgICAgMDAwMDAwMDAwMBAQEBAQEBAgEBAgICAQICAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA//AABEIABEAEQMBEQACEQEDEQH/xAB7AAABBQEAAAAAAAAAAAAAAAAHBAUGCAkKAQADAQEAAAAAAAAAAAAAAAAAAgMBBBAAAQQCAQEGBwAAAAAAAAAAAwIEBQYBBwASE7OU1HU3VZVWCBgJGREAAQIDBwUBAAAAAAAAAAAAAQACESEDMUFRYRIiE8EyIwQUM//aAAwDAQACEQMRAD8A6dqzWGG7oxexthoLP1SaK8dUDX7lw4RUmdSAcwYacn4YJUM7NYrO0Fh8tT5LgLEDgYADQpBSm6i40joZJ15vjlhBTA17jZcohT6qDGoKbuLT8PF0C5PqFXL1IUWrENH6+teXsC1mpOpSNXSVcW0W+SUgGUkIQ37I2ULyQgsFEVnO8hp1DFsYRNozisA2hzZGCT/nXoX4pL+AF5vh8tXJHKxEbU9hi6Cwj9JW942grBTgkhKjmVMJk0vNIYEUGszFbcuFIbyTtrC9g2kmg1KcM3gl9aOxIAhFqAvPK2YNuRvj0WtMNptCbLEjVmsUylf07R9esdvW+NPDQkDSK7XomWIp1noHM2ssCxC4jKdBOF4du3LrKRdIugXW4WIaxvI+dQnjGPTNB0tk0DUVXD+bOuvquT+Wg81y32PwScAxRZ++/wBg5X1Vl3Dzk/V/VNV7UIP1pe21o9Rje6d8p7neEtGxaWc41Zf/2Q=="
-            alt="本题剩余时间"/><span id="helpTime" class="help-time">阅读剩余时间</span>: <span id="readTime"></span></p>
+  <div class="g-help">
+    <div class="m-time">
+      <p><img class="time-icon"
+              src="data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABkAAD/4QONaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6M2NjNzAyNTItYjU1NC1mODQ2LWI0MmUtNzNhMWY0MzllZDUwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjNBMEMzODU5N0UzMDExRTY4MkMzQTJEMkIxMTY1QUYxIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjNBMEMzODU4N0UzMDExRTY4MkMzQTJEMkIxMTY1QUYxIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE1IChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjNlYmNlZjBmLWExYzgtMTQ0Yy1iMWFjLTU5M2M2OGQyNmZkNyIgc3RSZWY6ZG9jdW1lbnRJRD0iYWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjgxYTA1YmI3LTdlMGQtMTFlNi1iNmY1LWNiYmE2YTljY2I1NCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/uAA5BZG9iZQBkwAAAAAH/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAgICAgICAgICAgMDAwMDAwMDAwMBAQEBAQEBAgEBAgICAQICAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA//AABEIABEAEQMBEQACEQEDEQH/xAB7AAABBQEAAAAAAAAAAAAAAAAHBAUGCAkKAQADAQEAAAAAAAAAAAAAAAAAAgMBBBAAAQQCAQEGBwAAAAAAAAAAAwIEBQYBBwASE7OU1HU3VZVWCBgJGREAAQIDBwUBAAAAAAAAAAAAAQACESEDMUFRYRIiE8EyIwQUM//aAAwDAQACEQMRAD8A6dqzWGG7oxexthoLP1SaK8dUDX7lw4RUmdSAcwYacn4YJUM7NYrO0Fh8tT5LgLEDgYADQpBSm6i40joZJ15vjlhBTA17jZcohT6qDGoKbuLT8PF0C5PqFXL1IUWrENH6+teXsC1mpOpSNXSVcW0W+SUgGUkIQ37I2ULyQgsFEVnO8hp1DFsYRNozisA2hzZGCT/nXoX4pL+AF5vh8tXJHKxEbU9hi6Cwj9JW942grBTgkhKjmVMJk0vNIYEUGszFbcuFIbyTtrC9g2kmg1KcM3gl9aOxIAhFqAvPK2YNuRvj0WtMNptCbLEjVmsUylf07R9esdvW+NPDQkDSK7XomWIp1noHM2ssCxC4jKdBOF4du3LrKRdIugXW4WIaxvI+dQnjGPTNB0tk0DUVXD+bOuvquT+Wg81y32PwScAxRZ++/wBg5X1Vl3Dzk/V/VNV7UIP1pe21o9Rje6d8p7neEtGxaWc41Zf/2Q=="
+              alt="本题剩余时间"/><span id="helpTime" class="help-time">阅读剩余时间</span>: <span id="readTime"></span></p>
+    </div>
+    <div class="m-content">
+      <h2>操作指南</h2>
+      <p>任务考察你在限定空间范围内的记忆能力。请尽可能快速的回忆呈现数字顺序和位置，并准确的按照从小到大的顺序在空间中选出数字所在位置。</p>
+      <p></p>
+      <p>请跟随操作指南了解任务操作方式和规则。</p>
+      <div class="help-close button click" id="helpCloseBtn" onselectstart="return false;">下一步</div>
+    </div>
   </div>
-  <div class="m-content">
-    <h2>操作指南</h2>
-    <p>任务考察你在限定空间范围内的记忆能力。请尽可能快速的回忆呈现数字顺序和位置，并准确的按照从小到大的顺序在空间中选出数字所在位置。</p>
-    <p></p>
-    <p>请跟随操作指南了解任务操作方式和规则。</p>
-    <div class="help-close button click" id="helpCloseBtn" onselectstart="return false;">下一步</div>
+  <div class="g-click">
+    <div class="u-main u-main1">
+      <h2>操作指南已结束！</h2>
+      <p class="intro">下面即将进入练习。</p>
+      <button class="f-btn intro-btn1 displayNone" id="startPractice" type="button">开始练习</button>
+    </div>
+    <div class="u-main u-main2">
+      <h2>练习结束！</h2>
+      <p class="intro">下面即将进入测试。</p>
+      <button class="f-btn intro-btn1 displayNone" id="startTestBtn" type="button">开始测试</button>
+    </div>
   </div>
+  <div class="g-model"></div>
 </div>
+
 <script src="jquery-1.8.3_min.js"></script>
 <script src="intro.js"></script>
 <script>
@@ -483,7 +578,9 @@
         flashTime: 1000,//闪烁时间 ms
         timeText: 300,//答题最大时间
         level: 50,//改变间隔
-        readTime: 1,//操作指南阅读时间 单位ms
+        readTime: 1,//操作指南阅读时间 单位s
+        introTime:1,//操作指引时间 单位s
+        practiseTime:1,//操作指引时间 单位s
       }
     };
     var self, config, data,
@@ -505,10 +602,17 @@
       allTrueNum = 0,//答对总次数
       allTestNum = 0,//总测试次数
       schedule = 1,//测试进度
+      thisPageNum = 0,//page状态： read:0,intro:1,practise:2
+      time = '',//计时器
       sureBtnBool = 0;
     Mot.prototype = {
+      constructor:Mot,
       //操作指引
       changeIntro: function () {
+        thisPageNum = 1;
+        clearTimeout(time);
+        $('#time').html(self.secondsToTime(config.introTime));
+        self.setTime($('#time'));
         introJs().setOptions({
           nextLabel: '下一步 &rarr;',
           prevLabel: '&larr; 上一步',
@@ -526,21 +630,24 @@
 //          console.log(target.id);
           switch (target.id) {
             case "step2":
-              setTimeout(function () {
+//              setTimeout(function () {
                 self.ballMoving().then(function () {
                   self.chooseBall();
                 });
-              },1000);
-              break;
-            case "step4":
-              self.turnOff();
-              break;
-            case "step5":
+//              },1000);
               break;
             default :
               return;
           }
         });
+      },
+      //退出操作指引
+      exitIntro: function () {
+        introJs().exit();
+        self.tipPop('show','.u-main2');
+        thisPageNum = 2;
+        thisSelArr = [];
+        //$('#time').text(self.secondsToTime(config.practiseTime));
       },
       debug: function () {
         if (config.debug) {
@@ -574,7 +681,7 @@
       },
       //移除数组中指定值
       arrRemove: function (arr, val) {
-        var index = $.inArray(val, arr)
+        var index = $.inArray(val, arr);
         if (index > -1) {
           arr.splice(index, 1);
         }
@@ -622,12 +729,20 @@
         }
         if ((minute == 0) && (second == 0)) {
           $(el).text("00:00");
-          $('#helpCloseBtn').click();
+          console.log(thisPageNum)
+          if(thisPageNum === 0){
+            $('#helpCloseBtn').click();
+          }else if(thisPageNum === 1){
+            self.exitIntro();
+          }else if(thisPageNum === 2){
+            console.log(1);
+            self.tipPop('show','.u-main1');
+          }
         } else {
           $(el).text(minute + ":" + second);
         }
         if ($(el).text() != '00:00') {
-          var time = setTimeout(
+           time = setTimeout(
             function () {
               self.setTime($(el))
             }, 1000)
@@ -683,21 +798,12 @@
           });
         }
       },
-      //清除小球
-      clearBall: function () {
-        $(".ball").remove();
-      },
-      //小球开始运动
-      onMove: function (el, l, t) {
-        el.css({
-          left: l + 'px',
-          top: t + 'px'
-        });
-      },
       //小球运动过程
       ballMoving: function () {
         var def = $.Deferred();
         var SIZE = 2 * config.ballR;//球宽
+        $('.ball').remove();
+        self.creatBall(SIZE, config.ballColor, config.ballNum);
         var ball = $('.ball');
         var xSpeed = [], ySpeed = [];
         for (var i = 0; i < config.ballNum; i++) {
@@ -705,13 +811,15 @@
           ySpeed.push(self.rnd(-config.speedMax, config.speedMax));
         }
         self.ballFlash();
-
         testTimeOut = setTimeout(function () {
           clearInterval(flashBool);
           for (var i = 0; i < config.ballNum; i++) {
             (function (i) {
               iAutoPlayTimer[i] = setInterval(function () {
-                self.onMove(ball.eq(i), xArr[i], yArr[i]);
+                ball.eq(i).css({
+                  left: xArr[i] + 'px',
+                  top: yArr[i] + 'px'
+                });
                 xArr[i] = xArr[i] + xSpeed[i];
                 yArr[i] = yArr[i] + ySpeed[i];
                 if (xArr[i] <= config.speedMax / 2) {
@@ -779,9 +887,14 @@
           }
           sureBtnBool = 0;
           if (thisSelArr.length === config.selNum) {
-            $("#sureBtn").addClass('click').click(function () {
+            $("#sureBtn").off('click').addClass('click').click(function () {
               if ($(this).hasClass('click')) {
-                self.selFun();
+                if(thisPageNum === 1){
+                  self.exitIntro();
+//                  console.log(1);
+                }else {
+                  self.selFun();
+                }
               }
             });
           } else {
@@ -812,8 +925,9 @@
             thisGameNum = 0;
             gameNum++;
             config.selNum++;
-            if (config.selNum > config.selNumMax) {
-//                                console.log('end');
+            if (config.selNum > config.selNumMax && thisPageNum === 2) {
+              console.log('end');
+              self.tipPop('show','.u-main1');
               return false;
             }
           }
@@ -839,16 +953,66 @@
 //        console.log(allTestNum, allTrueNum, allAccuracyArr, allTimeArr);
       },
       //操作指南下一步fun
-      helpFun: function () {
+      readFun: function () {
         $('#helpCloseBtn').click(function () {
+          $('.g-test,.g-bottom').show();
           $('#helpCloseBtn').text('关闭');
           $('.m-time,.g-help').addClass('displayNone');
           $('.g-test').removeClass('displayNone');
-          var SIZE = 2 * config.ballR;//球宽
-          self.clearBall();
-          self.creatBall(SIZE, config.ballColor, config.ballNum);
+//          var SIZE = 2 * config.ballR;//球宽
+//          $(".ball").remove();
+//          self.creatBall(SIZE, config.ballColor, config.ballNum);
           self.changeIntro();
-        })
+        });
+      },
+      tipPop: function (show,ele) {
+        clearTimeout(time);
+        if(show === 'show'){
+          $('.g-click,.g-model').show();
+          $(ele).hide();
+          $(ele).next().show();
+          if(ele === '.u-main2') {
+            var startPractice = setTimeout(self.startPractice,2000);
+          }else if(ele === '.u-main1'){
+            var startTestTime = setTimeout(self.startTestBtn,2000);
+          }
+        }else{
+          $('.g-click,.g-model').hide();
+        }
+      },
+      //开始练习Func
+      startPractice: function () {
+        $("#sureBtn").removeClass('click');
+        self.tipPop('hide','.u-main2');
+        $("#time").html(self.secondsToTime(config.practiseTime + 1));
+        self.setTime($('#time'));
+        $('.m-practise').show();
+        thisPageNum = 2;
+        self.ballMoving().then(function () {
+          self.chooseBall();
+        });
+      },
+      //开始正式测试Func
+      startTestBtn: function () {
+        $('#time').text("00:00");
+        clearTimeout(time);
+        console.log('startTestBtn');
+        // window.external.exampleEnd('');
+      },
+      //指导语按钮点击方法
+      helpBtnFun: function () {
+        $('.g-test,.g-bottom').hide();
+        $('.g-help').show();
+        $('#helpCloseBtn').off('click').click(function () {
+          $('.g-test,.g-bottom').show();
+          $('.g-help').hide();
+        });
+        $('.closeHelpBtn').click(function () {
+          $('.g-main').show();
+          $('.g-help').hide();
+          $('.g-title').show();
+        });
+//        $('.introjs-helperLayer').hide();
       },
       init: function (initStr) {
         //解析传入json字符串
@@ -862,20 +1026,23 @@
             this.isConfig = true;
           }
         }
-        $('#time').html(self.secondsToTime(config.timeText));
         $('#readTime').html(self.secondsToTime(config.readTime + 1));
         self.setTime($('#readTime'));
-        self.helpFun();
+        self.readFun();
         allTestNum = (config.selNumMax - config.selNum + 1) * config.testNum; //测试总次数
-        $('.all-schedule').text(allTestNum);
+        $('.all-schedule').text(allTestNum < 10?'0'+allTestNum:allTestNum);
+        $('#helpBtn').click(function () {
+          self.helpBtnFun();
+        });
+        $('#endPractiseBtn').click(function () {
+          self.tipPop('show','.u-main1');
+        })
       }
     };
     window.Mot = Mot;
   })(jQuery);
   window.API = new Mot();
-  window.API.init("{'debug':true,'ballNum':10,'selNum':3,'selNumMax':5," +
-    "'testNum':10,'speedRate':2,'speedMax':8,'ballColor':'#fbcf2e','ballR':20,'moveTime':5000," +
-    "'flashTime':1000,'timeText':300,'level':50,'readTime':1}");
+  window.API.init("{'readTime':11,'introTime':15,'practiseTime':1000}");
 </script>
 </body>
 </html>

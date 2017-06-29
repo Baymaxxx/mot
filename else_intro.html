@@ -693,7 +693,7 @@
         }
     </style>
 </head>
-<body onselectstart="return false" ondragstart='return false;'>
+<body>
 <div class="allPage">
     <div class="g-debug">
         <p>本题答案：</p>
@@ -1501,36 +1501,6 @@
 //                $('#helpBtn').show();
                 introJs().exit();
             },
-            tipPop: function (show,ele) {
-                if(show === 'show'){
-                    self.exitIntro();
-                    $('.g-click,.g-model').show();
-                    self.turnOff();
-                    config.clickNum = 1;
-                    $(ele).hide();
-                    $(ele).next().show();
-                    if(ele == '.u-main2') {
-                        var startPractice = setTimeout(self.startPractice,config.clickTime * 1000);
-                    }else if(ele == '.u-main1'){
-                        var startTestTime = setTimeout(self.startTestBtn,config.clickTime * 1000);
-                    }
-                }else{
-                    $('.g-click,.g-model').hide();
-                }
-            },
-            startPractice: function () {
-                self.tipPop('hide','.u-main2');
-                $('.horizontal').find('.topic img').unbind('click');
-                setTimeout(self.rndShow,1000);
-                $('#againBtn').removeClass('trueColor');
-                $('#helpBtn').show();
-                setTimeout("$('#endPractiseBtn').show()",13000)
-            },
-            startTestBtn: function () {
-                $('#time').text("00:00");
-                clearTimeout(time);
-                window.external.exampleEnd('');
-            },
             //初始化
             init: function (str) {
                 //解析传入json字符串
@@ -1722,6 +1692,21 @@
                     self.returnText();
                 }
             },
+          tipPop: function (show,ele) {
+            if(show === 'show'){
+              self.exitIntro();
+              $('.g-click,.g-model').show();
+              $(ele).hide();
+              $(ele).next().show();
+              if(ele === '.u-main2') {
+                var startPractice = setTimeout(self.startPractice,config.clickTime * 1000);
+              }else if(ele == '.u-main1'){
+                var startTestTime = setTimeout(self.startTestBtn,config.clickTime * 1000);
+              }
+            }else{
+              $('.g-click,.g-model').hide();
+            }
+          },
             turnClickFun: function () {
                 $('.horizontal').find('.topic img').unbind('click').click(function(){
                     if(!$('.topic img').is(":animated")){
@@ -1833,7 +1818,7 @@
         window.MemoryTest = MemoryTest;
     }(jQuery));
     window.API = new MemoryTest();
-    window.API.init("{'readTime':22,'introTime':60,'testTime':30}")
+    window.API.init("{'readTime':22,'introTime':2,'testTime':30}")
 </script>
 </body>
 </html>
